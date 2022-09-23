@@ -43,7 +43,7 @@ html {
 	-moz-background-size: cover;
 	-o-background-size: cover;
 	background-position: top;
-	height: auto;
+	height: 800px;
 }
 
 .material-icons {
