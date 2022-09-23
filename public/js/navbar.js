@@ -38,7 +38,6 @@ firebase.auth().onAuthStateChanged(function (user) {
 	} else {
 		doneLoading();
 	}
-	doSohiljokes();
 });
 
 //some pages only load the navbar, so this toggles the loader for them
