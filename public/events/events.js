@@ -127,7 +127,7 @@ function addHTMLEvent(title, leader, date, time, userCount, maxpeople, location,
 	if (isNaN(maxpeople)) {
 		maxpeople = "unlimited";
 	}
-	//description = linkifyStr(description);
+	description = linkifyStr(description);
 	var div = document.createElement('div');
 	div.className = 'card hoverable';
 	if (alreadySignedUp) {
