@@ -10,7 +10,7 @@ $(document).ready(function () {
 	doEvents();
 });
 
-//for number of columns, which depens on device size
+//for number of columns, which deepens on device size
 window.onresize = function () {
 	if (window.innerWidth > windowWidth) { //window width got bigger
 		if (window.innerWidth > tabletWidth && windowWidth <= tabletWidth) {
