@@ -115,7 +115,7 @@ function addEvent(title, leader, date, time, maxpeople, location, description, u
 					console.log("No such document!");
 				}
 			}).catch(function (error) {
-				console.log("Error getting document at " + i + ":", error);
+				console.log("Error getting document:", error);
 			});
 		}
 	}
