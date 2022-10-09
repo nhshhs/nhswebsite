@@ -96,7 +96,7 @@ function addEvent(title, leader, date, time, maxpeople, location, description, u
 		var numberDone = 0;
 		var alreadySignedUp = false;
 		for (var i = 0; i < users.length; i++) {
-			firebase.firestore().collection("users").doc(data.users[i]).get().then(function (doc) {
+			firebase.firestore().collection("users").doc(users[i]).get().then(function (doc) {
 				if (doc.exists) {
 					if (firebase.auth().currentUser != null && doc.id === firebase.auth().currentUser.uid) {
 						userList += "<p>" + doc.data().firstName + " " + doc.data().lastName + " (you)</p>";
