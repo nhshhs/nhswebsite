@@ -1,13 +1,31 @@
+//public/admin/events/events.js
+
 /*jshint multistr: true */
 'use strict';
 
 const desktopWidth = 992,
-	tabletWidth = 600;
+    tabletWidth = 600;
 var windowWidth = window.innerWidth;
+var events = [];
+var counter = -1;  
+var colCounter = 0;
 
 $(document).ready(function () {
 	doEvents();
 });
+
+function eventcompare(a, b) {
+    try {
+        var date1 = new Date(a.data().date).getTime();
+        var date2 = new Date(b.data().date).getTime();
+        if (date1 > date2) return -1;
+        else if (date1 < date2) return 1;
+        else return 0;
+    } catch (error) {
+        console.error("Error comparing events:", error);
+        return 0; // Return 0 if comparison fails
+    }
+}
 
 //for number of columns, which depens on device size
 window.onresize = function () {
@@ -34,53 +52,111 @@ firebase.auth().onAuthStateChanged(function (user) {
 
 var events = [];
 
-function doEvents() { //sorts events by date
-	firebase.firestore().collection("events").get().then(function (query) {
+function doEvents() {
+    console.log("Starting to fetch events");
+    showLoader();
+    
+    counter = -1;
+    colCounter = 0;
+    events = [];
 
-		query.forEach(function (doc) {
-			events.push(doc);
-		});
-		
-		if(events.length == 0){
-			document.getElementById("messagearea").innerHTML = '<h5 class="center">There are no events right now.</h5>';
-			toggleLoader();
-		} else {
-			events.sort(eventcompare);
+    const eventsRef = window.db.collection("events");
+    console.log("Attempting to query events collection:", eventsRef.path);
 
-			function eventcompare(a, b) {
-				var date1 = new Date(a.data().date).getTime();
-				var date2 = new Date(b.data().date).getTime();
-				if (date1 > date2) return -1;
-				else if (date1 < date2) return 1;
-				else return 0;
-			}
-			
-			doEventsHelper();	
-		}
+    eventsRef
+        .get()
+        .then(snapshot => {
+            console.log("Query executed. Empty?", snapshot.empty);
+            console.log("Number of docs:", snapshot.size);
+            
+            if (snapshot.empty) {
+                document.getElementById("messagearea").innerHTML = 
+                    '<h5 class="center">There are no events right now.</h5>';
+                hideLoader();
+                return;
+            }
 
-	}).catch(function (error) {
-		console.log("new error", error);
-	});
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                console.log("Event document:", {
+                    id: doc.id,
+                    title: data.title,
+                    date: data.date,
+                    exists: doc.exists
+                });
+                events.push(doc);
+            });
+
+            if (events.length > 0) {
+                try {
+                    console.log("Sorting events");
+                    events.sort(eventcompare);
+                    doEventsHelper();
+                } catch (error) {
+                    console.error("Error sorting events:", error);
+                    doEventsHelper();
+                }
+            } else {
+                hideLoader();
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching events:", error);
+            document.getElementById("messagearea").innerHTML = 
+                '<h5 class="center">Error loading events: ' + error.message + '</h5>';
+            hideLoader();
+        });
 }
-
-var counter = -1;
 
 function doEventsHelper() {
-	counter++;
-	if (counter<events.length) {
-		//doesn't show member names in event cards
-		addEvent(events[counter].data().title, events[counter].data().leader, events[counter].data().date, events[counter].data().time, events[counter].data().maxpeople, events[counter].data().location, events[counter].data().description, events[counter].data().users, events[counter].id);
-		//shows member names in event cards
-//		addEventWithNames(events[counter].data().title, events[counter].data().leader, events[counter].data().date, events[counter].data().time, events[counter].data().maxpeople, events[counter].data().location, events[counter].data().description, events[counter].data().users, events[counter].id);
-	} else {
-		toggleLoader();
-	}
+    console.log("Running doEventsHelper, counter:", counter);
+    counter++;
+    
+    if (counter < events.length) {
+        const event = events[counter];
+        const data = event.data();
+        console.log("Processing event", counter + 1, "of", events.length, ":", event.id);
+        
+        try {
+            addEvent(
+                data.title || 'Untitled',
+                data.leader || 'No leader specified',
+                data.date || 'No date specified',
+                data.time || 'No time specified',
+                data.maxpeople,
+                data.location || 'No location specified',
+                data.description || 'No description available',
+                data.users || [],
+                event.id
+            );
+        } catch (error) {
+            console.error("Error processing event:", error);
+        }
+    } else {
+        console.log("All events processed");
+        hideLoader();
+    }
 }
 
-
 function addEvent(title, leader, date, time, maxpeople, location, description, users, id) {
-	addHTMLEvent(title, leader, date, time, users.length, maxpeople, location, description, id);
-	doEventsHelper();
+    console.log("Adding event to DOM:", {
+        id: id,
+        title: title,
+        users: users
+    });
+    
+    addHTMLEvent(
+        title, 
+        leader, 
+        date, 
+        time, 
+        users.length, 
+        maxpeople, 
+        location, 
+        description, 
+        id
+    );
+    doEventsHelper();
 }
 
 //gets the data for each event and then calls the html function
@@ -120,7 +196,7 @@ function addHTMLEvent(title, leader, date, time, userCount, maxpeople, location,
 	if (isNaN(maxpeople)) {
 		maxpeople = "unlimited";
 	}
-//	description = linkifyStr(description);
+	//description = linkifyStr(description);
 	var div = document.createElement('div');
 	div.className = 'card hoverable';
 	div.innerHTML = '<div class="card-content"> <span class="card-title blue-text text-darken-4"><b>' + title + '</b></span>\

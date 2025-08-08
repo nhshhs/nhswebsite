@@ -1,161 +1,218 @@
+//public/login/login.js
 'use strict';
 
 $(document).ready(function () {
-	$(".modal").modal();
+    $(".modal").modal();
 });
 
 firebase.auth().onAuthStateChanged(function (user) {
-	if (user) {
-		// User is signed in.
-		if (justSignedUp) {
-			fillDoc(user);
-		} else {
-			window.location.href = "/index.html";
-		}
-	} else {
-		toggleLoader();
-	}
+    console.log("Auth state changed. User:", user ? "signed in" : "not signed in");
+    
+    if (user) {
+        verifyUserDocument(user.uid)
+            .then(() => {
+                hideLoader();
+                window.location.href = "/index.html";
+            })
+            .catch(error => {
+                console.error("Error verifying user document:", error);
+                hideLoader();
+            });
+    } else {
+        hideLoader();
+    }
 });
 
-var userEmail, userPass, firstName, lastName, idNumber, grade;
-
 function login() {
-	userEmail = document.getElementById("email").value;
-	userPass = document.getElementById("password").value;
+    const userEmail = document.getElementById("email").value;
+    const userPass = document.getElementById("password").value;
 
-	if (firstName === "" || lastName === "" || idNumber === "" || userEmail === "" || userPass === "" || grade === "") {
-		alert("Please fill all of the fields before submitting.");
-	} else {
-		toggleLoader();
-		firebase.auth().signInWithEmailAndPassword(userEmail, userPass).catch(function (error) {
-			// Handle Errors here.
-			var errorCode = error.code;
-			var errorMessage = error.message;
-			
-			toggleLoader();
-			alert("Error : " + errorMessage);
-			
+    if (!userEmail || !userPass) {
+        alert("Please fill all of the fields before submitting.");
+        return;
+    }
 
-		});
-	}
+    toggleLoader();
+    firebase.auth().signInWithEmailAndPassword(userEmail, userPass)
+        .then(function(userCredential) {
+            console.log("User logged in successfully");
+        })
+        .catch(function (error) {
+            console.error("Login error:", error);
+            toggleLoader();
+            alert("Error: " + error.message);
+        });
 }
 
 function signUp() {
-	firstName = document.getElementById("firstname").value;
-	lastName = document.getElementById("lastname").value;
-	idNumber = document.getElementById("idnumber").value;
-	userEmail = document.getElementById("signupemail").value;
-	userPass = document.getElementById("signuppassword").value;
-	grade = $('input[name=grade]:checked').next().text();
+    const firstName = document.getElementById("firstname").value;
+    const lastName = document.getElementById("lastname").value;
+    const idNumber = document.getElementById("idnumber").value;
+    const userEmail = document.getElementById("signupemail").value;
+    const userPass = document.getElementById("signuppassword").value;
+    
+    // Modified grade selection to get the text content
+    const selectedGrade = document.querySelector('input[name="grade"]:checked');
+    const gradeValue = selectedGrade ? selectedGrade.nextElementSibling.textContent : null;
 
-	if (firstName === "" || lastName === "" || idNumber === "" || userEmail === "" || userPass === "" || grade === "") {
-		alert("Please fill all of the fields before submitting.");
-	} else {
-		toggleLoader();
-		var allowed = false;
+    console.log("Grade Selection Debug:", {
+        selectedElement: selectedGrade,
+        gradeText: gradeValue,
+        allGradeInputs: Array.from(document.querySelectorAll('input[name="grade"]')).map(input => ({
+            text: input.nextElementSibling?.textContent,
+            checked: input.checked
+        }))
+    });
 
-		firebase.firestore().collection("info").doc("allowedUsers").get().then(function (doc) {
-			if (doc.exists) {
-				var data = doc.data();
-				var emailList = data.emailList;
-				if (emailList.indexOf(userEmail) != -1) {
-					allowed = true;
-				}
-			} else {
-				// doc.data() will be undefined in this case
-				console.log("No such document!");
-			}
-		}).catch(function (error) {
-			console.log("Error getting document:", error);
-		}).then(function () {
-			if (allowed) {
-				createUser();
-			} else {
-				toggleLoader();
-				M.Modal.getInstance(document.getElementById("notAllowed")).open();
-			}
-		});
-	}
+    if (!gradeValue) {
+        alert("Please select a grade level");
+        return;
+    }
+
+    const grade = parseInt(gradeValue, 10);
+
+    console.log("Form values:", {
+        firstName,
+        lastName,
+        idNumber,
+        email: userEmail,
+        gradeValue,
+        grade,
+        hasPassword: !!userPass
+    });
+
+
+    if (!grade) {
+        alert("Please select a grade level");
+        return;
+    }
+
+    if (!firstName || !lastName || !idNumber || !userEmail || !userPass) {
+        const missing = [];
+        if (!firstName) missing.push('firstName');
+        if (!lastName) missing.push('lastName');
+        if (!idNumber) missing.push('idNumber');
+        if (!userEmail) missing.push('email');
+        if (!userPass) missing.push('password');
+        console.log("Missing fields:", missing);
+        alert("Please fill all of the fields before submitting.");
+        return;
+    }
+
+    
+
+    toggleLoader();
+    let createdUserId;
+
+    firebase.firestore().collection("info").doc("allowedUsers").get()
+        .then(function (doc) {
+            console.log("Checking allowed users:", doc.data());
+            if (!doc.exists || !doc.data().emailList.includes(userEmail)) {
+                throw new Error("User not allowed");
+            }
+            
+            return firebase.auth().createUserWithEmailAndPassword(userEmail, userPass);
+        })
+        .then(function(userCredential) {
+            createdUserId = userCredential.user.uid;
+            console.log("Auth user created with ID:", createdUserId);
+            
+            const userData = {
+                firstName: firstName,
+                lastName: lastName,
+                email: userEmail,
+                grade: grade,  // This will now be the number from the text next to the radio button
+                idNumber: parseFloat(idNumber),
+                deductions: "",
+                projectHours: 0,
+                regularHours: 0,
+                socialHours: 0,
+                hours: {
+                    fall: 0,
+                    spring: 0,
+                    summer: 0,
+                    total: 0
+                },
+                justUpdatedBy: createdUserId,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+        
+            console.log("Attempting to create user document with data:", userData);
+            return firebase.firestore()
+                .collection("users")
+                .doc(createdUserId)
+                .set(userData);
+        })
+        .then(function() {
+            console.log("User document created successfully");
+            toggleLoader();
+            window.location.href = "/index.html";
+        })
+        .catch(function(error) {
+            console.error("Error in signup process:", error);
+            toggleLoader();
+            if (error.message === "User not allowed") {
+                M.Modal.getInstance(document.getElementById("notAllowed")).open();
+            } else {
+                alert("An error occurred during signup: " + error.message);
+            }
+        });
 }
 
-var justSignedUp = false;
-
-function createUser() {
-	firebase.auth().createUserWithEmailAndPassword(userEmail, userPass)
-		.catch(function (error) {
-			// Handle Errors here.
-			var errorCode = error.code;
-			var errorMessage = error.message;
-			if (errorCode == 'auth/weak-password') {
-				alert('The password is too weak.');
-			} else {
-				alert(errorMessage);
-			}
-			console.log(error);
-			toggleLoader();
-		}).then(function (userCredentials) {
-			justSignedUp = true;
-		});
-}
-
-function fillDoc(user) {
-	if (user == null) {
-
-		setTimeout(function () { //waiting for createUser firebase function to run and create doc
-			fillDoc(user);
-		}, 500);
-
-	} else {
-		firebase.firestore().collection("users").doc(user.uid).get().then(function (doc) {
-			if (doc.exists) {
-				firebase.firestore().collection("users").doc(user.uid).update({
-					email: userEmail,
-					firstName: firstName,
-					lastName: lastName,
-					grade: parseFloat(grade),
-					idNumber: parseFloat(idNumber),
-				}).then(function () {
-					toggleLoader();
-					window.location.href = "/index.html";
-				}).catch(function (error) {
-					toggleLoader();
-					window.alert("Could not update. Error: " + error);
-					location.reload();
-				});
-			} else {
-				console.log("No such document!");
-				setTimeout(function () {
-					fillDoc(user);
-				}, 500);
-			}
-		}).catch(function (error) {
-			console.log("Error getting document:", error);
-		});
-	}
+function verifyUserDocument(userId) {
+    return firebase.firestore()
+        .collection("users")
+        .doc(userId)
+        .get()
+        .then(doc => {
+            if (doc.exists) {
+                const data = doc.data();
+                const needsUpdate = !data.hours;
+                
+                if (needsUpdate) {
+                    console.log('Fixing user document structure');
+                    const updatedData = {
+                        ...data,
+                        hours: {
+                            fall: 0,
+                            spring: 0,
+                            summer: 0,
+                            total: 0
+                        }
+                    };
+                    
+                    return firebase.firestore()
+                        .collection("users")
+                        .doc(userId)
+                        .set(updatedData, { merge: true });
+                }
+            }
+            return doc;
+        });
 }
 
 function forgotPassword() {
-	toggleLoader();
-	firebase.auth().sendPasswordResetEmail(document.getElementById("forgotpassemail").value).then(function () {
-		M.toast({
-			html: "Email has been sent."
-		});
-		document.getElementById("forgotpassemail").value = "";
-	}).catch(function (error) {
-		M.toast({
-			html: "There is no account associated with that email."
-		});
-		console.log("Error getting document:", error);
-	});
-	toggleLoader();
+    toggleLoader();
+    firebase.auth().sendPasswordResetEmail(document.getElementById("forgotpassemail").value)
+        .then(function () {
+            M.toast({ html: "Email has been sent." });
+            document.getElementById("forgotpassemail").value = "";
+        })
+        .catch(function (error) {
+            M.toast({ html: "There is no account associated with that email." });
+            console.error("Password reset error:", error);
+        })
+        .finally(() => {
+            toggleLoader();
+        });
 }
 
 function toggleLoginSignUp() {
-	if ($("#login").hasClass("hide")) {
-		$("#login").removeClass("hide");
-		$("#signup").addClass("hide");
-	} else {
-		$("#login").addClass("hide");
-		$("#signup").removeClass("hide");
-	}
+    if ($("#login").hasClass("hide")) {
+        $("#login").removeClass("hide");
+        $("#signup").addClass("hide");
+    } else {
+        $("#login").addClass("hide");
+        $("#signup").removeClass("hide");
+    }
 }

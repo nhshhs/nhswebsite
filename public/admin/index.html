@@ -1,297 +1,338 @@
 <!DOCTYPE html>
 <html>
-<head>
-<link rel="shortcut icon" href="/img/icon_nhs.png">
-<!--Import Google Icon Font-->
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<!--Import materialize.css-->
-<link type="text/css" rel="stylesheet" href="/css/materialize.min.css"  media="screen,projection"/>
-<link type="text/css" rel="stylesheet" href="/css/style.css"  media="screen,projection"/>
 
-<!--Let browser know website is optimized for mobile-->
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta charset="utf-8">
-<title>HHS NHS | Admin</title>
+<head>
+	<link rel="shortcut icon" href="/img/icon_nhs.png">
+	<!--Import Google Icon Font-->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<!--Import materialize.css-->
+	<link type="text/css" rel="stylesheet" href="/css/materialize.min.css" media="screen,projection" />
+	<link type="text/css" rel="stylesheet" href="/css/style.css" media="screen,projection" />
+
+	<!--Let browser know website is optimized for mobile-->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta charset="utf-8">
+	<title>HHS NHS | Admin</title>
 </head>
 
 <body>
-<div>
-	<nav class="blue accent-1">
-		<div class="container">
-			<div class="nav-wrapper"> <a href="/index.html" class="brand-logo blue-text text-darken-4">HHS <b>NHS</b></a> <a href="#" data-target="mobile-menu" class="sidenav-trigger"><i class="material-icons icon-black">menu</i></a>
-				<ul id="nav-mobile" class="right hide-on-med-and-down">
-					<li><a href="/index.html" class="blue-text text-darken-4">Home</a></li>
-					<li><a class="dropdown-trigger blue-text text-darken-4" href="#!" data-target="eventsdropdown">Events<i class="material-icons right">arrow_drop_down</i></a></li>
-					<li><a class="dropdown-trigger blue-text text-darken-4" href="#!" data-target="projectdropdown">Project<i class="material-icons right">arrow_drop_down</i></a></li>
-					<li class="active"><a href="/about/index.html" class="blue-text text-darken-4">About</a></li>
-					<li><a href="/admin/index.html" class="blue-text text-darken-4 admin hide">Admin</a></li>
-					<li><a href="/account/index.html" class="blue-text text-darken-4 account hide"></a></li>
-					<li><a href="/login/index.html" class="blue-text text-darken-4 login">Login</a></li>
+	<div>
+		<nav class="blue accent-1">
+			<div class="container">
+				<div class="nav-wrapper"> <a href="/index.html" class="brand-logo blue-text text-darken-4">HHS
+						<b>NHS</b></a> <a href="#" data-target="mobile-menu" class="sidenav-trigger"><i
+							class="material-icons icon-black">menu</i></a>
+					<ul id="nav-mobile" class="right hide-on-med-and-down">
+						<li><a href="/index.html" class="blue-text text-darken-4">Home</a></li>
+						<li><a class="dropdown-trigger blue-text text-darken-4" href="#!"
+								data-target="eventsdropdown">Events<i
+									class="material-icons right">arrow_drop_down</i></a></li>
+						<li><a class="dropdown-trigger blue-text text-darken-4" href="#!"
+								data-target="projectdropdown">Project<i
+									class="material-icons right">arrow_drop_down</i></a></li>
+						<li class="active"><a href="/about/index.html" class="blue-text text-darken-4">About</a></li>
+						<li><a href="/admin/index.html" class="blue-text text-darken-4 admin hide">Admin</a></li>
+						<li><a href="/account/index.html" class="blue-text text-darken-4 account hide"></a></li>
+						<li><a href="/login/index.html" class="blue-text text-darken-4 login">Login</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<ul id="eventsdropdown" class="dropdown-content">
+			<li><a href="/events/index.html" class="blue-text text-darken-4">Events</a></li>
+			<li><a href="/events/blog.html" class="blue-text text-darken-4">Blog</a></li>
+		</ul>
+		<ul id="projectdropdown" class="dropdown-content">
+			<li><a href="/project/index.html" class="blue-text text-darken-4">Home</a></li>
+			<li class="no-padding">
+				<ul class="collapsible collapsible-accordion">
+					<li>
+						<a class="collapsible-header waves-effect blue-text text-darken-4">Events</a>
+						<div class="collapsible-body">
+							<ul>
+								<li><a href="/events/index.html" class="blue-text text-darken-4">Events</a></li>
+								<li><a href="/events/blog.html" class="blue-text text-darken-4">Blog</a></li>
+							</ul>
+						</div>
+					</li>
 				</ul>
-			</div>
-		</div>
-	</nav>
-	<ul id="eventsdropdown" class="dropdown-content">
-		<li><a href="/events/index.html" class="blue-text text-darken-4">Events</a></li>
-		<li><a href="/events/blog.html" class="blue-text text-darken-4">Blog</a></li>
-	</ul>
-	<ul id="projectdropdown" class="dropdown-content">
-		<li><a href="/project/index.html" class="blue-text text-darken-4">Home</a></li>
-		<li class="no-padding">
-			<ul class="collapsible collapsible-accordion">
-				<li>
-					<a class="collapsible-header waves-effect blue-text text-darken-4">Events</a>
-					<div class="collapsible-body">
-						<ul>
-							<li><a href="/events/index.html" class="blue-text text-darken-4">Events</a></li>
-							<li><a href="/events/blog.html" class="blue-text text-darken-4">Blog</a></li>
-						</ul>
-					</div>
-				</li>
-			</ul>
-		</li>
-		<li><a href="/project/blog.html" class="blue-text text-darken-4">Blog</a></li>
-		<li><a href="/project/resourcepackets.html" class="blue-text text-darken-4">Resource Packets</a></li>
-	</ul>
-	<ul class="sidenav" id="mobile-menu">
-		<h1 class="center blue-text text-darken-4">HHS <b>NHS</b></h1>
-		<p class="center blue-text text-accent-1">Homestead National Honor Society</p>
-		<li><a href="/index.html" class="blue-text text-darken-4">Home</a></li>
-		<li><a href="/events/index.html" class="blue-text text-darken-4">Events</a></li>
-		<li class="no-padding">
-			<ul class="collapsible collapsible-accordion">
-				<li> <a class="collapsible-header waves-effect blue-text text-darken-4">Project</a>
-					<div class="collapsible-body">
-						<ul>
-							<li><a href="/project/index.html" class="blue-text text-darken-4">Home</a></li>
-							<li><a href="/project/events.html" class="blue-text text-darken-4">Events</a></li>
-							<li><a href="/project/blog.html" class="blue-text text-darken-4">Blog</a></li>
-							<li><a href="/project/resourcepackets.html" class="blue-text text-darken-4">Resource Packets</a></li>
-						</ul>
-					</div>
-				</li>
-			</ul>
-		</li>
-		<li><a href="/about/index.html" class="blue-text text-darken-4">About</a></li>
-		<li class="active"><a href="/admin/index.html" class="blue-text text-darken-4 admin hide">Admin</a></li>
-		<li><a href="/account/index.html" class="blue-text text-darken-4 account hide"></a></li>
-		<li><a href="/login/index.html" class="blue-text text-darken-4 login">Login</a></li>
-	</ul>
-</div>
-<div class="center-align">
-	<div class="row">
-		<h3 class="blue-text text-darken-4"><b>Admin</b></h3>
+			</li>
+			<li><a href="/project/blog.html" class="blue-text text-darken-4">Blog</a></li>
+			<li><a href="/project/resourcepackets.html" class="blue-text text-darken-4">Resource Packets</a></li>
+		</ul>
+		<ul class="sidenav" id="mobile-menu">
+			<h1 class="center blue-text text-darken-4">HHS <b>NHS</b></h1>
+			<p class="center blue-text text-accent-1">Homestead National Honor Society</p>
+			<li><a href="/index.html" class="blue-text text-darken-4">Home</a></li>
+			<li><a href="/events/index.html" class="blue-text text-darken-4">Events</a></li>
+			<li class="no-padding">
+				<ul class="collapsible collapsible-accordion">
+					<li> <a class="collapsible-header waves-effect blue-text text-darken-4">Project</a>
+						<div class="collapsible-body">
+							<ul>
+								<li><a href="/project/index.html" class="blue-text text-darken-4">Home</a></li>
+								<li><a href="/project/events.html" class="blue-text text-darken-4">Events</a></li>
+								<li><a href="/project/blog.html" class="blue-text text-darken-4">Blog</a></li>
+								<li><a href="/project/resourcepackets.html" class="blue-text text-darken-4">Resource
+										Packets</a></li>
+							</ul>
+						</div>
+					</li>
+				</ul>
+			</li>
+			<li><a href="/about/index.html" class="blue-text text-darken-4">About</a></li>
+			<li class="active"><a href="/admin/index.html" class="blue-text text-darken-4 admin hide">Admin</a></li>
+			<li><a href="/account/index.html" class="blue-text text-darken-4 account hide"></a></li>
+			<li><a href="/login/index.html" class="blue-text text-darken-4 login">Login</a></li>
+		</ul>
 	</div>
-	<div class="row">
-		<div> <a href="#createevent" class="waves-effect waves-light btn-large modal-trigger blue accent-1 blue-text text-darken-4 ad hide">Create new event</a> </div>
-	</div>
-	<div class="row">
-		<div> <a href="/admin/events/index.html" class="waves-effect waves-light btn-large blue accent-1 blue-text text-darken-4 ad hide">Manage Events</a> </div>
-	</div>
-	<div class="row">
-		<div> <a href="/admin/blog/index.html" class="waves-effect waves-light btn-large blue accent-1 blue-text text-darken-4 ad hide">Manage Event Blog</a> </div>
-	</div>
-	<div class="row">
-		<div> <a href="/admin/project/index.html" class="waves-effect waves-light btn-large blue accent-1 blue-text text-darken-4 project hide">Manage Project</a> </div>
-	</div>
-	<div class="row">
-		<div> <a href="/admin/members/index.html" class="waves-effect waves-light btn-large blue accent-1 blue-text text-darken-4 exec hide">Manage Members</a> </div>
-	</div>
-	<div class="row">
-		<div> <a href="#changereqs" class="waves-effect waves-light btn-large modal-trigger blue accent-1 blue-text text-darken-4 exec hide">Change Hours Requirements</a> </div>
-	</div>
-	<div class="row">
-		<div> <a id="toggleAllowedUsers" href="javascript: toggleAllowedUsers()" class="waves-effect waves-light btn-large blue accent-1 blue-text text-darken-4 exec hide">Manage who can create an account</a> </div>
-	</div>
-	<div id="allowedUsers" class="hide">
-		<div class="row divider container"></div>
-		<div class="row container">
-			<div class="col s12 m6">
-				<div class="row"><a href="#allowUser" class="waves-effect waves-light btn modal-trigger blue accent-1 blue-text text-darken-4">Allow Users to make an account</a> </div>
-			</div>
-			<div class="col s12 m6">
-				<div class="row"> <a href="#removeUser" class="waves-effect waves-light btn modal-trigger blue accent-1 blue-text text-darken-4">Remove users from allowed user list</a> </div>
-			</div>
+	<div class="center-align">
+		<div class="row">
+			<h3 class="blue-text text-darken-4"><b>Admin</b></h3>
 		</div>
 		<div class="row">
-			<h5 id="emailListHeader"></h5>
+			<div> <a href="#createevent"
+					class="waves-effect waves-light btn-large modal-trigger blue accent-1 blue-text text-darken-4 ad hide">Create
+					new event</a> </div>
 		</div>
 		<div class="row">
-			<p id="allowedUsersList"></p>
+			<div> <a href="/admin/events/index.html"
+					class="waves-effect waves-light btn-large blue accent-1 blue-text text-darken-4 ad hide">Manage
+					Events</a> </div>
+		</div>
+		<div class="row">
+			<div> <a href="/admin/blog/index.html"
+					class="waves-effect waves-light btn-large blue accent-1 blue-text text-darken-4 ad hide">Manage
+					Event Blog</a> </div>
+		</div>
+		<div class="row">
+			<div> <a href="/admin/project/index.html"
+					class="waves-effect waves-light btn-large blue accent-1 blue-text text-darken-4 project hide">Manage
+					Project</a> </div>
+		</div>
+		<div class="row">
+			<div> <a href="/admin/members/index.html"
+					class="waves-effect waves-light btn-large blue accent-1 blue-text text-darken-4 exec hide">Manage
+					Members</a> </div>
+		</div>
+		<div class="row">
+			<div> <a href="#changereqs"
+					class="waves-effect waves-light btn-large modal-trigger blue accent-1 blue-text text-darken-4 exec hide">Change
+					Hours Requirements</a> </div>
+		</div>
+		<div class="row">
+			<div> <a id="toggleAllowedUsers" href="javascript: toggleAllowedUsers()"
+					class="waves-effect waves-light btn-large blue accent-1 blue-text text-darken-4 exec hide">Manage
+					who can create an account</a> </div>
+		</div>
+		<div id="allowedUsers" class="hide">
+			<div class="row divider container"></div>
+			<div class="row container">
+				<div class="col s12 m6">
+					<div class="row"><a href="#allowUser"
+							class="waves-effect waves-light btn modal-trigger blue accent-1 blue-text text-darken-4">Allow
+							Users to make an account</a> </div>
+				</div>
+				<div class="col s12 m6">
+					<div class="row"> <a href="#removeUser"
+							class="waves-effect waves-light btn modal-trigger blue accent-1 blue-text text-darken-4">Remove
+							users from allowed user list</a> </div>
+				</div>
+			</div>
+			<div class="row">
+				<h5 id="emailListHeader"></h5>
+			</div>
+			<div class="row">
+				<p id="allowedUsersList"></p>
+			</div>
 		</div>
 	</div>
-</div>
-<div id="createevent" class="modal">
-	<div class="modal-content">
-		<h4 class="center blue-text text-darken-4">Create New Event</h4>
-		<div class="row center"> Event Title:
-			<div class="input-field inline">
-				<input id="title" type="text">
-			</div>
-		</div>
-		<div class="row center"> Event Leader:
-			<div class="input-field inline">
-				<input id="leader" type="text">
-				<label for="leader">Firstname Lastname</label>
-			</div>
-		</div>
-		<div class="row center"> Date:
-			<div class="input-field inline">
-				<input id="date" type="text" class="datepicker">
-			</div>
-		</div>
-		<div class="row center"> Time:
-			<div class="input-field inline">
-				<input id="time" type="text">
-				<label for="time">Startime to endtime</label>
-			</div>
-		</div>
-		<div class="row center"> Location:
-			<div class="input-field inline">
-				<input id="location" type="text">
-			</div>
-		</div>
-		<div class="row center"> Max People:
-			<div class="input-field inline">
-				<input id="maxpeople" type="number" min="1">
-				<label for="maxpeople">Leave blank if no max</label>
-			</div>
-		</div>
-		<div class="row center"> Description:
-			<div class="input-field inline">
-				<textarea id="description" class="materialize-textarea"></textarea>
-			</div>
-		</div>
-		<div class="row center"> Links in the description will automatically become clickable as long as there is a space on either side of them. </div>
-	</div>
-	<div class="modal-footer">
-		<div class="row center"><a href="javascript: createNewEvent()" class="modal-close waves-effect waves-blue btn-flat btn-large blue darken-4 white-text">Create</a> </div>
-		<!-- Removed cancel button to make modal cleaner, you can exit by clicking outside the modal anyway -->
-		<!--		<div class="row center"><a href="#!" class="modal-close waves-effect waves-blue btn-flat btn-large red accent-4 white-text">Cancel</a></div>-->
-	</div>
-</div>
-<div id="allowUser" class="modal">
-	<form onSubmit="allowUsers(); return false;">
+	<div id="createevent" class="modal">
 		<div class="modal-content">
-			<h4 class="center-align blue-text text-darken-4">Allow users to make an account</h4>
-			<p class="center-align">THIS ALLOWS THEM TO CREATE AN ACCOUNT. THIS DOES NOT GIVE THEM AN ACCOUNT. Enter email addresses separated by a comma. If there is only one, simply enter it.</p>
-			<div class="input-field col s12">
-				<textarea id="allowemaillist" class="materialize-textarea"></textarea>
-				<label for="allowemaillist">Enter emails here</label>
+			<h4 class="center blue-text text-darken-4">Create New Event</h4>
+			<div class="row center"> Event Title:
+				<div class="input-field inline">
+					<input id="title" type="text">
+				</div>
+			</div>
+			<div class="row center"> Event Leader:
+				<div class="input-field inline">
+					<input id="leader" type="text">
+					<label for="leader">Firstname Lastname</label>
+				</div>
+			</div>
+			<div class="row center"> Date:
+				<div class="input-field inline">
+					<input id="date" type="text" class="datepicker">
+				</div>
+			</div>
+			<div class="row center"> Time:
+				<div class="input-field inline">
+					<input id="time" type="text">
+					<label for="time">Startime to endtime</label>
+				</div>
+			</div>
+			<div class="row center"> Location:
+				<div class="input-field inline">
+					<input id="location" type="text">
+				</div>
+			</div>
+			<div class="row center"> Max People:
+				<div class="input-field inline">
+					<input id="maxpeople" type="number" min="1">
+					<label for="maxpeople">Leave blank if no max</label>
+				</div>
+			</div>
+			<div class="row center"> Description:
+				<div class="input-field inline">
+					<textarea id="description" class="materialize-textarea"></textarea>
+				</div>
+			</div>
+			<div class="row center"> Links in the description will automatically become clickable as long as there is a
+				space on either side of them. </div>
+		</div>
+		<div class="modal-footer">
+			<div class="row center"><a href="javascript: createNewEvent()"
+					class="modal-close waves-effect waves-blue btn-flat btn-large blue darken-4 white-text">Create</a>
+			</div>
+			<!-- Removed cancel button to make modal cleaner, you can exit by clicking outside the modal anyway -->
+			<!--		<div class="row center"><a href="#!" class="modal-close waves-effect waves-blue btn-flat btn-large red accent-4 white-text">Cancel</a></div>-->
+		</div>
+	</div>
+	<div id="allowUser" class="modal">
+		<form onSubmit="allowUsers(); return false;">
+			<div class="modal-content">
+				<h4 class="center-align blue-text text-darken-4">Allow users to make an account</h4>
+				<p class="center-align">THIS ALLOWS THEM TO CREATE AN ACCOUNT. THIS DOES NOT GIVE THEM AN ACCOUNT. Enter
+					email addresses separated by a comma. If there is only one, simply enter it.</p>
+				<div class="input-field col s12">
+					<textarea id="allowemaillist" class="materialize-textarea"></textarea>
+					<label for="allowemaillist">Enter emails here</label>
+				</div>
+				<div class="row center">
+					<button
+						class="center modal-close btn-flat btn-large blue darken-4 white-text waves-effect waves-light"
+						type="submit" name="action">Add user(s) to allowed list</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div id="removeUser" class="modal">
+		<form onSubmit="removeUsers(); return false;">
+			<div class="modal-content">
+				<h4 class="center-align blue-text text-darken-4">Stop allowing users to make an account</h4>
+				<p class="center-align">THIS ONLY STOPS ALLOWING THEM TO CREATE AN ACCOUNT. THIS DOES NOT REMOVE THEIR
+					ACCOUNT. Enter email addresses separated by a comma. If there is only one, simply enter it.</p>
+				<div class="input-field col s12">
+					<textarea id="removeemaillist" class="materialize-textarea"></textarea>
+					<label for="removeemaillist">Enter emails here</label>
+				</div>
+				<div class="row center">
+					<button
+						class="center modal-close btn-flat btn-large blue darken-4 white-text waves-effect waves-light"
+						type="submit" name="action">Remove user(s) from allowed list</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div id="changereqs" class="modal">
+		<div class="modal-content">
+			<h4 class="center-align blue-text text-darken-4">Change Hours Requirements</h4>
+			<div class="row">
+				<div class="input-field col s12 m8 offset-m2"> <i class="material-icons prefix">chevron_right</i>
+					<input id="regularhours" type="number" step="any" class="validate">
+					<label for="regularhours">Regular Hours</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="input-field col s12 m8 offset-m2"> <i class="material-icons prefix">chevron_right</i>
+					<input id="projecthours" type="number" step="any" class="validate">
+					<label for="projecthours">Project Hours</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="input-field col s12 m8 offset-m2"> <i class="material-icons prefix">chevron_right</i>
+					<input id="socialhours" type="number" step="any" class="validate">
+					<label for="socialhours">Social Hours</label>
+				</div>
 			</div>
 			<div class="row center">
-				<button class="center modal-close btn-flat btn-large blue darken-4 white-text waves-effect waves-light" type="submit" name="action">Add user(s) to allowed list</button>
-			</div>
-		</div>
-	</form>
-</div>
-<div id="removeUser" class="modal">
-	<form onSubmit="removeUsers(); return false;">
-		<div class="modal-content">
-			<h4 class="center-align blue-text text-darken-4">Stop allowing users to make an account</h4>
-			<p class="center-align">THIS ONLY STOPS ALLOWING THEM TO CREATE AN ACCOUNT. THIS DOES NOT REMOVE THEIR ACCOUNT. Enter email addresses separated by a comma. If there is only one, simply enter it.</p>
-			<div class="input-field col s12">
-				<textarea id="removeemaillist" class="materialize-textarea"></textarea>
-				<label for="removeemaillist">Enter emails here</label>
-			</div>
-			<div class="row center">
-				<button class="center modal-close btn-flat btn-large blue darken-4 white-text waves-effect waves-light" type="submit" name="action">Remove user(s) from allowed list</button>
-			</div>
-		</div>
-	</form>
-</div>
-<div id="changereqs" class="modal">
-	<div class="modal-content">
-		<h4 class="center-align blue-text text-darken-4">Change Hours Requirements</h4>
-		<div class="row">
-			<div class="input-field col s12 m8 offset-m2"> <i class="material-icons prefix">chevron_right</i>
-				<input id="regularhours" type="number" step="any" class="validate">
-				<label for="regularhours">Regular Hours</label>
-			</div>
-		</div>
-		<div class="row">
-			<div class="input-field col s12 m8 offset-m2"> <i class="material-icons prefix">chevron_right</i>
-				<input id="projecthours" type="number" step="any" class="validate">
-				<label for="projecthours">Project Hours</label>
-			</div>
-		</div>
-		<div class="row">
-			<div class="input-field col s12 m8 offset-m2"> <i class="material-icons prefix">chevron_right</i>
-				<input id="socialhours" type="number" step="any" class="validate">
-				<label for="socialhours">Social Hours</label>
-			</div>
-		</div>
-		<div class="row center">
-			<a href="javascript:changeReqs();" class="center modal-close btn-flat btn-large blue darken-4 white-text waves-effect waves-light">Update</a>
-		</div>
-	</div>
-</div>
-
-<!-- Preloader and it's background. -->
-<div class="preloader-background">
-	<div class="preloader-wrapper big active">
-		<div class="spinner-layer spinner-blue">
-			<div class="circle-clipper left">
-				<div class="circle"></div>
-			</div>
-			<div class="gap-patch">
-				<div class="circle"></div>
-			</div>
-			<div class="circle-clipper right">
-				<div class="circle"></div>
-			</div>
-		</div>
-		<div class="spinner-layer spinner-red">
-			<div class="circle-clipper left">
-				<div class="circle"></div>
-			</div>
-			<div class="gap-patch">
-				<div class="circle"></div>
-			</div>
-			<div class="circle-clipper right">
-				<div class="circle"></div>
-			</div>
-		</div>
-		<div class="spinner-layer spinner-yellow">
-			<div class="circle-clipper left">
-				<div class="circle"></div>
-			</div>
-			<div class="gap-patch">
-				<div class="circle"></div>
-			</div>
-			<div class="circle-clipper right">
-				<div class="circle"></div>
-			</div>
-		</div>
-		<div class="spinner-layer spinner-green">
-			<div class="circle-clipper left">
-				<div class="circle"></div>
-			</div>
-			<div class="gap-patch">
-				<div class="circle"></div>
-			</div>
-			<div class="circle-clipper right">
-				<div class="circle"></div>
+				<a href="javascript:changeReqs();"
+					class="center modal-close btn-flat btn-large blue darken-4 white-text waves-effect waves-light">Update</a>
 			</div>
 		</div>
 	</div>
-	<p>Loading</p>
-</div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-<!-- The core Firebase JS SDK is always required and must be listed first -->
-<script src="https://www.gstatic.com/firebasejs/7.0.0/firebase-app.js"></script>
+	<!-- Preloader and it's background. -->
+	<div class="preloader-background">
+		<div class="preloader-wrapper big active">
+			<div class="spinner-layer spinner-blue">
+				<div class="circle-clipper left">
+					<div class="circle"></div>
+				</div>
+				<div class="gap-patch">
+					<div class="circle"></div>
+				</div>
+				<div class="circle-clipper right">
+					<div class="circle"></div>
+				</div>
+			</div>
+			<div class="spinner-layer spinner-red">
+				<div class="circle-clipper left">
+					<div class="circle"></div>
+				</div>
+				<div class="gap-patch">
+					<div class="circle"></div>
+				</div>
+				<div class="circle-clipper right">
+					<div class="circle"></div>
+				</div>
+			</div>
+			<div class="spinner-layer spinner-yellow">
+				<div class="circle-clipper left">
+					<div class="circle"></div>
+				</div>
+				<div class="gap-patch">
+					<div class="circle"></div>
+				</div>
+				<div class="circle-clipper right">
+					<div class="circle"></div>
+				</div>
+			</div>
+			<div class="spinner-layer spinner-green">
+				<div class="circle-clipper left">
+					<div class="circle"></div>
+				</div>
+				<div class="gap-patch">
+					<div class="circle"></div>
+				</div>
+				<div class="circle-clipper right">
+					<div class="circle"></div>
+				</div>
+			</div>
+		</div>
+		<p>Loading</p>
+	</div>
 
-<!-- TODO: Add SDKs for Firebase products that you want to use
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+	<!-- The core Firebase JS SDK is always required and must be listed first -->
+	<script src="https://www.gstatic.com/firebasejs/7.0.0/firebase-app.js"></script>
+
+	<!-- TODO: Add SDKs for Firebase products that you want to use
      https://firebase.google.com/docs/web/setup#available-libraries -->
-<script src="https://www.gstatic.com/firebasejs/7.0.0/firebase-analytics.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.0.0/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.0.0/firebase-firestore.js"></script>
-<script type="text/javascript" src="/js/firebaseStuff.js"></script>
-<script type="text/javascript" src="/js/materialize.min.js"></script>
-<script type="text/javascript" src="/js/preloader.js"></script>
-<script type="text/javascript" src="/js/navbar.js"></script>
-<script type="text/javascript" src="/admin/checkPermission.js"></script>
-<script type="text/javascript" src="/admin/admin.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+	<script src="https://www.gstatic.com/firebasejs/7.0.0/firebase-analytics.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/7.0.0/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/7.0.0/firebase-firestore.js"></script>
+
+	<script type="text/javascript" src="/js/firebaseStuff.js"></script>
+	<script type="text/javascript" src="/js/materialize.min.js"></script>
+	<script type="text/javascript" src="/js/preloader.js"></script>
+	<script type="text/javascript" src="/js/navbar.js"></script>
+	<script type="text/javascript" src="/admin/checkPermission.js"></script>
+	<script type="text/javascript" src="/admin/admin.js"></script>
 </body>
+
 </html>

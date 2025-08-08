@@ -1,5 +1,11 @@
+//navbar.js
 /*jshint multistr: true */
 'use strict';
+console.log("Navbar.js loading...");
+
+let storedFirstName = localStorage.getItem('firstName');
+
+
 
 $(document).ready(function () {
 	$('.sidenav').sidenav();
@@ -12,34 +18,133 @@ $(document).ready(function () {
 
 //puts the name in the navbar if logged in
 firebase.auth().onAuthStateChanged(function (user) {
-	if (user) {
-		// User is signed in.
-		$(".login").text("Logout");
-		$(".login").attr("href", "javascript:logout();");
-		firebase.firestore().collection("users").doc(user.uid).get().then(function (doc) {
-			if (doc.exists) {
-				$(".account").text(doc.data().firstName);
-
-				firebase.firestore().collection("info").doc("admins").get().then(function (adminDoc) {
-					if (adminDoc.data().execs.includes(doc.id) || adminDoc.data().project.includes(doc.id) || adminDoc.data().ads.includes(doc.id)) {
-						$(".admin").removeClass("hide");
-					}
-					doneLoading();
-				});
-
+    console.log("Auth state changed. User:", user ? user.uid : "not signed in");
+    if (user) {
+        let storedFirstName = localStorage.getItem('firstName');
+        console.log("Stored firstName:", storedFirstName);
+        console.log("User is signed in. UID:", user.uid);
+        $(".login").text("Logout");
+        $(".login").attr("href", "javascript:logout();");
+        firebase.firestore().collection("users").doc(user.uid).get().then(function (doc) {
+            console.log("Attempting to fetch user document");
+            if (doc.exists) {
+				console.log("User document exists:", doc.data());
+				let firestoreFirstName = doc.data().firstName;
+				console.log("Firestore firstName:", firestoreFirstName);
+				$(".account").text(firestoreFirstName || storedFirstName || "New User");
+				localStorage.removeItem('firstName');
+				checkAdminStatus(doc);
 			} else {
-				// doc.data() will be undefined in this case
-				console.log("No such document!");
+				console.log("No user document! Creating one now...");
+				return createUserDocument(user).then(() => {
+					return firebase.firestore().collection("users").doc(user.uid).get();
+				}).then((newDoc) => {
+					let firestoreFirstName = newDoc.data().firstName;
+					$(".account").text(firestoreFirstName || storedFirstName || "New User");
+					localStorage.removeItem('firstName');
+					return newDoc;
+				});
 			}
-		}).catch(function (error) {
-			console.log("Error getting document:", error);
-		});
-		$(".account").removeClass("hide");
-	} else {
-		doneLoading();
-	}
+        }).then((doc) => {
+            if (doc) {
+                checkAdminStatus(doc);
+            }
+        }).catch(function (error) {
+            console.error("Error getting or creating user document:", error);
+            doneLoading();
+        });
+        $(".account").removeClass("hide");
+    } else {
+        console.log("User is not signed in");
+        doneLoading();
+    }
 });
 
+function createUserDocument(user) {
+    console.log('Creating user document for:', user.uid);
+    let storedFirstName = localStorage.getItem('firstName');
+    let storedLastName = localStorage.getItem('lastName');
+    return firebase.firestore().collection("users").doc(user.uid).set({
+        firstName: storedFirstName || "New",
+        lastName: storedLastName || "User",
+        email: user.email,
+        grade: parseFloat(localStorage.getItem('grade')) || null,
+        idNumber: parseFloat(localStorage.getItem('idNumber')) || null,
+        deductions: "",
+        projectHours: 0,
+        regularHours: 0,
+        socialHours: 0,
+        hours: {
+            fall: 0,
+            spring: 0,
+            summer: 0,
+            total: 0
+        },
+        //justUpdatedBy: user.uid
+    }).then(() => {
+        console.log('User document created in Firestore');
+        console.log('First Name:', storedFirstName);
+        console.log('Last Name:', storedLastName);
+        return user;
+    }).catch(error => {
+        console.error('Error creating user document in Firestore:', error);
+        throw error;
+    });
+}
+
+function checkAdminStatus(doc) {
+    firebase.firestore().collection("info").doc("admins").get().then(function (adminDoc) {
+        console.log("Fetching admin document");
+        if (adminDoc.exists) {
+            console.log("Admin document exists:", adminDoc.data());
+            if (adminDoc.data().execs.includes(doc.id) || adminDoc.data().project.includes(doc.id) || adminDoc.data().ads.includes(doc.id)) {
+                console.log("User is an admin");
+                $(".admin").removeClass("hide");
+            } else {
+                console.log("User is not an admin");
+            }
+        } else {
+            console.log("Admin document does not exist");
+        }
+        doneLoading();
+    }).catch(function(error) {
+        console.error("Error fetching admin document:", error);
+        doneLoading();
+    });
+}
+
+// function logout() {
+//     localStorage.removeItem('firstName');
+//     firebase.auth().signOut();
+//     location.reload();
+// }
+
+function logout() {
+    localStorage.removeItem('firstName');
+    firebase.auth().signOut();
+    location.reload();
+}
+
+function checkAdminStatus(doc) {
+    firebase.firestore().collection("info").doc("admins").get().then(function (adminDoc) {
+        console.log("Fetching admin document");
+        if (adminDoc.exists) {
+            console.log("Admin document exists:", adminDoc.data());
+            if (adminDoc.data().execs.includes(doc.id) || adminDoc.data().project.includes(doc.id) || adminDoc.data().ads.includes(doc.id)) {
+                console.log("User is an admin");
+                $(".admin").removeClass("hide");
+            } else {
+                console.log("User is not an admin");
+            }
+        } else {
+            console.log("Admin document does not exist");
+        }
+        doneLoading();
+    }).catch(function(error) {
+        console.error("Error fetching admin document:", error);
+        doneLoading();
+    });
+}
 //some pages only load the navbar, so this toggles the loader for them
 function doneLoading() {
 	if (window.location.pathname === "/" && !new URLSearchParams(location.search).has('sohiljoke3') || window.location.pathname === "/project" || window.location.pathname === "/about") {

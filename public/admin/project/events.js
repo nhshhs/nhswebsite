@@ -1,3 +1,4 @@
+//public/admin/project/events.js
 /*jshint multistr: true */
 'use strict';
 

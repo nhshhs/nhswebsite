@@ -1,3 +1,4 @@
+// public/admin/member/member.js
 'use strict';
 
 var uid, logs = [];
@@ -59,9 +60,20 @@ function doLogs() {
 					log.previousValue[key] = '"' + log.previousValue[key] + '"';
 					log.newValue[key] = '"' + log.newValue[key] + '"';
 				}
-				var printkey = key.replace( /([A-Z])/g, " $1" );
+				if(key === "hours") {
+					const seasons = ['fall', 'spring', 'summer', 'total'];
+					seasons.forEach(season => {
+						const prevHours = log.previousValue.hours?.[season] || 0;
+						const newHours = log.newValue.hours?.[season] || 0;
+						if(prevHours !== newHours) {
+							changes += `<p>${season.charAt(0).toUpperCase() + season.slice(1)} Hours changed from ${prevHours} to ${newHours}</p>`;
+						}
+					});
+					return; 
+				}
+				var printkey = key.replace(/([A-Z])/g, " $1");
 				printkey = printkey.charAt(0).toUpperCase() + printkey.slice(1);
-				changes+="<p>"+printkey+" changed from "+log.previousValue[key]+" to "+log.newValue[key]+"</p>";
+				changes += "<p>" + printkey + " changed from " + log.previousValue[key] + " to " + log.newValue[key] + "</p>";
 			});
 			$("#logs .collection").append('<li class="collection-item">'+changes+'<p>by: ' + log.changedBy + ' on ' + log.time.toLocaleDateString() + ' at ' + log.time.toLocaleTimeString() + '</p></li>');
 		});

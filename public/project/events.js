@@ -1,13 +1,19 @@
+//public/project/events.js
 /*jshint multistr: true */
 'use strict';
 
+console.log("Project Events.js loading");
+
 const desktopWidth = 992,
-	tabletWidth = 600;
+    tabletWidth = 600;
 var windowWidth = window.innerWidth;
+var events = [];
+var counter = -1;
+var limit = 7;
 
 $(document).ready(function () {
-	$('.modal').modal();
-	doEvents();
+    $('.modal').modal();
+    doEvents();
 });
 
 //for number of columns, which deepens on device size
@@ -37,47 +43,118 @@ var events = [];
 
 //gets events, sorts them by date
 function doEvents() {
-	firebase.firestore().collection("project").doc("events").collection("events").get().then(function (query) {
+    console.log("Starting to fetch project events");
+    showLoader();
+    
+    if (!window.db) {
+        console.error('Firestore db not initialized');
+        document.getElementById("messagearea").innerHTML = 
+            '<h5 class="center">Error: Database not initialized</h5>';
+        hideLoader();
+        return;
+    }
 
-		query.forEach(function (doc) {
-			events.push(doc);
-		});
-		
-		if(events.length==0){
-			document.getElementById("messagearea").innerHTML = '<h5 class="center">There are no events right now.</h5>';
-			toggleLoader();
-		} else {
-			events.sort(eventcompare);
+    const projectEventsRef = window.db.collection("project").doc("events").collection("events");
+    console.log("Attempting to query project events collection:", projectEventsRef.path);
 
-			function eventcompare(a, b) {
-				var date1 = new Date(a.data().date).getTime();
-				var date2 = new Date(b.data().date).getTime();
-				if (date1 > date2) return -1;
-				else if (date1 < date2) return 1;
-				else return 0;
-			}
-			if(events.length>limit){
-				document.getElementById("loadpast").classList.remove("hide");	
-			}
-			doEventsHelper();
-		}
+    projectEventsRef.get()
+        .then(function (query) {
+            console.log("Query executed. Empty?", query.empty);
+            console.log("Number of docs:", query.size);
 
-	}).catch(function (error) {
-		console.log("new error", error);
-	});
+            if (query.empty) {
+                document.getElementById("messagearea").innerHTML = 
+                    '<h5 class="center">There are no events right now.</h5>';
+                hideLoader();
+                return;
+            }
+
+            events = [];
+            query.forEach(function (doc) {
+                const data = doc.data();
+                console.log("Processing document:", doc.id, data);
+                
+                // Only add the document if it has valid data
+                if (data) {
+                    events.push({
+                        id: doc.id,
+                        data: data
+                    });
+                }
+            });
+            
+            if (events.length == 0) {
+                document.getElementById("messagearea").innerHTML = 
+                    '<h5 class="center">There are no valid events right now.</h5>';
+                hideLoader();
+            } else {
+                try {
+                    events.sort((a, b) => eventcompare(a.data, b.data));
+                    
+                    if (events.length > limit) {
+                        document.getElementById("loadpast").classList.remove("hide");    
+                    }
+                    
+                    counter = -1;
+                    doEventsHelper();
+                } catch (error) {
+                    console.error("Error sorting events:", error);
+                    document.getElementById("messagearea").innerHTML = 
+                        '<h5 class="center">Error processing events: ' + error.message + '</h5>';
+                    hideLoader();
+                }
+            }
+        })
+        .catch(function (error) {
+            console.error("Error fetching project events:", error);
+            document.getElementById("messagearea").innerHTML = 
+                '<h5 class="center">Error loading events: ' + error.message + '</h5>';
+            hideLoader();
+        });
+}
+
+function eventcompare(a, b) {
+    try {
+        const date1 = new Date(a.date).getTime();
+        const date2 = new Date(b.date).getTime();
+        return date2 - date1; // Sort in descending order
+    } catch (error) {
+        console.error("Error comparing events:", error);
+        return 0;
+    }
 }
 
 var counter = -1;
 var limit = 7;//just to not go over the firebase read limit
 
 function doEventsHelper() {
-	counter++;
-	if (counter<events.length&&(counter < limit || new Date() < new Date(events[counter].data().date))) {
-		addEvent(events[counter].data().title, events[counter].data().leader, events[counter].data().date, events[counter].data().time, events[counter].data().maxpeople, events[counter].data().location, events[counter].data().description, events[counter].data().users, events[counter].data().signupsOpen, events[counter].id);
-	} else {
-		toggleLoader();
-	}
+    counter++;
+    console.log("Processing event", counter + 1, "of", events.length);
+    
+    if (counter < events.length && (counter < limit || new Date() < new Date(events[counter].data.date))) {
+        const event = events[counter];
+        try {
+            addEvent(
+                event.data.title || 'Untitled Event',
+                event.data.leader || 'No Leader Assigned',
+                event.data.date || 'No Date Set',
+                event.data.time || 'No Time Set',
+                event.data.maxpeople,
+                event.data.location || 'No Location Set',
+                event.data.description || 'No Description Available',
+                event.data.users || [],
+                event.data.signupsOpen || false,
+                event.id
+            );
+        } catch (error) {
+            console.error("Error processing event:", error);
+            hideLoader();
+        }
+    } else {
+        hideLoader();
+    }
 }
+
 
 function loadPast(){
 	toggleLoader();
@@ -88,37 +165,56 @@ function loadPast(){
 
 //formats data and calls the html maker
 function addEvent(title, leader, date, time, maxpeople, location, description, users, signupsOpen, id) {
-	if (users.length == 0) {
-		addHTMLEvent(title, leader, date, time, users.length, maxpeople, location, description, "<p>No members have signed up.</p>", false, signupsOpen, id);
-		doEventsHelper();
-	} else {
-		var userList = "";
-		var numberDone = 0;
-		var alreadySignedUp = false;
-		for (var i = 0; i < users.length; i++) {
-			firebase.firestore().collection("users").doc(users[i]).get().then(function (doc) {
-				if (doc.exists) {
-					if (firebase.auth().currentUser != null && doc.id === firebase.auth().currentUser.uid) {
-						userList += "<p>" + doc.data().firstName + " " + doc.data().lastName + " (you)</p>";
-						alreadySignedUp = true;
-					} else {
-						userList += "<p>" + doc.data().firstName + " " + doc.data().lastName + "</p>";
-					}
+    console.log("Adding event:", {title, leader, date, users});
+    
+    if (!users || users.length == 0) {
+        addHTMLEvent(title, leader, date, time, 0, maxpeople, location, description, 
+            "<p>No members have signed up.</p>", false, signupsOpen, id);
+        doEventsHelper();
+        return;
+    }
 
-					numberDone++;
-					if (numberDone >= users.length) {
-						addHTMLEvent(title, leader, date, time, users.length, maxpeople, location, description, userList, alreadySignedUp, signupsOpen, id);
-						doEventsHelper();
-					}
-				} else {
-					// doc.data() will be undefined in this case
-					console.log("No such document!");
-				}
-			}).catch(function (error) {
-				console.log("Error getting document:", error);
-			});
-		}
-	}
+    let userPromises = users.map(userId => 
+        firebase.firestore().collection("users").doc(userId).get()
+    );
+
+    Promise.all(userPromises)
+        .then(userDocs => {
+            let userList = "";
+            let alreadySignedUp = false;
+            
+            userDocs.forEach(doc => {
+                if (doc.exists) {
+                    const userData = doc.data();
+                    if (firebase.auth().currentUser && doc.id === firebase.auth().currentUser.uid) {
+                        userList += `<p>${userData.firstName} ${userData.lastName} (you)</p>`;
+                        alreadySignedUp = true;
+                    } else {
+                        userList += `<p>${userData.firstName} ${userData.lastName}</p>`;
+                    }
+                }
+            });
+
+            // If we couldn't get any user data, show a message
+            if (!userList) {
+                userList = "<p>Error loading member list</p>";
+            }
+
+            addHTMLEvent(
+                title, leader, date, time, users.length, maxpeople, 
+                location, description, userList, alreadySignedUp, signupsOpen, id
+            );
+            doEventsHelper();
+        })
+        .catch(error => {
+            console.error("Error getting user data:", error);
+            addHTMLEvent(
+                title, leader, date, time, users.length, maxpeople,
+                location, description, "<p>Error loading member list</p>", 
+                false, signupsOpen, id
+            );
+            doEventsHelper();
+        });
 }
 
 var colCounter = 0;
