@@ -10,6 +10,11 @@ $(document).ready(function () {
 	uid = params.get('uid');
 	firebase.firestore().collection("users").doc(uid).get().then(function (doc) {
 		if (doc.exists) {
+			if (doc.data().deleted) {
+				alert("This member has been deleted.");
+				window.location.href = '/admin/members/index.html';
+				return;
+			}
 			fillTextFields(doc.data());
 		} else {
 			// doc.data() will be undefined in this case
@@ -177,6 +182,14 @@ function update() {
 
 function goBack() {
 	window.location.href = '/admin/members/index.html';
+}
+
+function promptDeleteCurrentMember() {
+	promptDeleteMember(uid, $("#firstname").val() + " " + $("#lastname").val());
+}
+
+function confirmDeleteCurrentMember() {
+	confirmDeleteMember('/admin/members/index.html');
 }
 
 function toggleLogs() {

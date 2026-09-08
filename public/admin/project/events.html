@@ -16,74 +16,9 @@
 </head>
 
 <body>
-	<div>
-		<nav class="blue accent-1">
-			<div class="container">
-				<div class="nav-wrapper"> <a href="/index.html" class="brand-logo blue-text text-darken-4">HHS
-						<b>NHS</b></a> <a href="#" data-target="mobile-menu" class="sidenav-trigger"><i
-							class="material-icons icon-black">menu</i></a>
-					<ul id="nav-mobile" class="right hide-on-med-and-down">
-						<li><a href="/index.html" class="blue-text text-darken-4">Home</a></li>
-						<li><a class="dropdown-trigger blue-text text-darken-4" href="#!"
-								data-target="eventsdropdown">Events<i
-									class="material-icons right">arrow_drop_down</i></a></li>
-						<li><a class="dropdown-trigger blue-text text-darken-4" href="#!"
-								data-target="projectdropdown">Project<i
-									class="material-icons right">arrow_drop_down</i></a></li>
-						<li class="active"><a href="/about/index.html" class="blue-text text-darken-4">About</a></li>
-						<li><a href="/admin/index.html" class="blue-text text-darken-4 admin hide">Admin</a></li>
-						<li><a href="/account/index.html" class="blue-text text-darken-4 account hide"></a></li>
-						<li><a href="/login/index.html" class="blue-text text-darken-4 login">Login</a></li>
-					</ul>
-				</div>
-			</div>
-		</nav>
-		<ul id="eventsdropdown" class="dropdown-content">
-			<li><a href="/events/index.html" class="blue-text text-darken-4">Events</a></li>
-			<li><a href="/events/blog.html" class="blue-text text-darken-4">Blog</a></li>
-		</ul>
-		<ul id="projectdropdown" class="dropdown-content">
-			<li><a href="/project/index.html" class="blue-text text-darken-4">Home</a></li>
-			<li class="no-padding">
-				<ul class="collapsible collapsible-accordion">
-					<li>
-						<a class="collapsible-header waves-effect blue-text text-darken-4">Events</a>
-						<div class="collapsible-body">
-							<ul>
-								<li><a href="/events/index.html" class="blue-text text-darken-4">Events</a></li>
-								<li><a href="/events/blog.html" class="blue-text text-darken-4">Blog</a></li>
-							</ul>
-						</div>
-					</li>
-				</ul>
-			</li>
-			<li><a href="/project/blog.html" class="blue-text text-darken-4">Blog</a></li>
-		</ul>
-		<ul class="sidenav" id="mobile-menu">
-			<h1 class="center blue-text text-darken-4">HHS <b>NHS</b></h1>
-			<p class="center blue-text text-accent-1">Homestead National Honor Society</p>
-			<li><a href="/index.html" class="blue-text text-darken-4">Home</a></li>
-			<li><a href="/events/index.html" class="blue-text text-darken-4">Events</a></li>
-			<li class="no-padding">
-				<ul class="collapsible collapsible-accordion">
-					<li>
-						<a class="collapsible-header waves-effect blue-text text-darken-4">Project</a>
-						<div class="collapsible-body">
-							<ul>
-								<li><a href="/project/index.html" class="blue-text text-darken-4">Home</a></li>
-								<li><a href="/project/events.html" class="blue-text text-darken-4">Events</a></li>
-								<li><a href="/project/blog.html" class="blue-text text-darken-4">Blog</a></li>
-							</ul>
-						</div>
-					</li>
-				</ul>
-			</li>
-			<li><a href="/about/index.html" class="blue-text text-darken-4">About</a></li>
-			<li class="active"><a href="/admin/index.html" class="blue-text text-darken-4 admin hide">Admin</a></li>
-			<li><a href="/account/index.html" class="blue-text text-darken-4 account hide"></a></li>
-			<li><a href="/login/index.html" class="blue-text text-darken-4 login">Login</a></li>
-		</ul>
-	</div>
+		<!-- Navbar Component Container -->
+	<div id="navbar-container"></div>
+			
 	<div class="container">
 		<div class="row">
 			<div class="col s12">
@@ -92,9 +27,19 @@
 			</div>
 		</div>
 		<div class="row" id="messagearea">
-			<div class="col l4 m6 s12" id="col1"></div>
-			<div class="col l4 m6 s12" id="col2"></div>
-			<div class="col l4 m6 s12" id="col3"></div>
+			<div class="col s12" id="projectEventCol"></div>
+		</div>
+	</div>
+
+	<div id="areyousuredeleteevent" class="modal">
+		<div class="modal-content">
+			<h4 class="red-text center">Are you sure?</h4>
+			<p class="center">Are you sure you want to delete <b id="deleteEventName"></b>? This cannot be undone.</p>
+		</div>
+		<div class="modal-footer">
+			<a href="#!" class="modal-close waves-effect waves-blue btn-flat red-text">Cancel</a>
+			<a href="#!" onclick="confirmDeleteListEvent(); return false;"
+				class="modal-close waves-effect waves-blue btn-flat blue-text text-darken-4">Delete</a>
 		</div>
 	</div>
 
@@ -162,7 +107,7 @@
 	<script src="https://www.gstatic.com/firebasejs/7.0.0/firebase-firestore.js"></script>
 	<script type="text/javascript" src="/js/firebaseStuff.js"></script>
 	<script type="text/javascript" src="/js/materialize.min.js"></script>
-	<script type="text/javascript" src="/js/preloader.js"></script>
+	<script type="text/javascript" src="/js/preloader.js"></script>	<script type="text/javascript" src="/js/navbar-component.js"></script>
 	<script type="text/javascript" src="/js/navbar.js"></script>
 	<script type="text/javascript" src="/admin/checkPermission.js"></script>
 	<!--<script type="text/javascript" src="/node_modules/linkifyjs/dist/linkify.min.js"></script>-->

@@ -16,73 +16,8 @@
 </head>
 
 <body>
-	<div>
-		<nav class="blue accent-1">
-			<div class="container">
-				<div class="nav-wrapper"> <a href="/index.html" class="brand-logo blue-text text-darken-4">HHS
-						<b>NHS</b></a> <a href="#" data-target="mobile-menu" class="sidenav-trigger"><i
-							class="material-icons icon-black">menu</i></a>
-					<ul id="nav-mobile" class="right hide-on-med-and-down">
-						<li><a href="/index.html" class="blue-text text-darken-4">Home</a></li>
-						<li><a class="dropdown-trigger blue-text text-darken-4" href="#!"
-								data-target="eventsdropdown">Events<i
-									class="material-icons right">arrow_drop_down</i></a></li>
-						<li><a class="dropdown-trigger blue-text text-darken-4" href="#!"
-								data-target="projectdropdown">Project<i
-									class="material-icons right">arrow_drop_down</i></a></li>
-						<li class="active"><a href="/about/index.html" class="blue-text text-darken-4">About</a></li>
-						<li><a href="/admin/index.html" class="blue-text text-darken-4 admin hide">Admin</a></li>
-						<li><a href="/account/index.html" class="blue-text text-darken-4 account hide"></a></li>
-						<li><a href="/login/index.html" class="blue-text text-darken-4 login">Login</a></li>
-					</ul>
-				</div>
-			</div>
-		</nav>
-		<ul id="eventsdropdown" class="dropdown-content">
-			<li><a href="/events/index.html" class="blue-text text-darken-4">Events</a></li>
-			<li><a href="/events/blog.html" class="blue-text text-darken-4">Blog</a></li>
-		</ul>
-		<ul id="projectdropdown" class="dropdown-content">
-			<li><a href="/project/index.html" class="blue-text text-darken-4">Home</a></li>
-			<li class="no-padding">
-				<ul class="collapsible collapsible-accordion">
-					<li>
-						<a class="collapsible-header waves-effect blue-text text-darken-4">Events</a>
-						<div class="collapsible-body">
-							<ul>
-								<li><a href="/events/index.html" class="blue-text text-darken-4">Events</a></li>
-								<li><a href="/events/blog.html" class="blue-text text-darken-4">Blog</a></li>
-							</ul>
-						</div>
-					</li>
-				</ul>
-			</li>
-			<li><a href="/project/blog.html" class="blue-text text-darken-4">Blog</a></li>
-		</ul>
-		<ul class="sidenav" id="mobile-menu">
-			<h1 class="center blue-text text-darken-4">HHS <b>NHS</b></h1>
-			<p class="center blue-text text-accent-1">Homestead National Honor Society</p>
-			<li><a href="/index.html" class="blue-text text-darken-4">Home</a></li>
-			<li><a href="/events/index.html" class="blue-text text-darken-4">Events</a></li>
-			<li class="active no-padding">
-				<ul class="collapsible collapsible-accordion">
-					<li> <a class="collapsible-header waves-effect blue-text text-darken-4">Project</a>
-						<div class="collapsible-body">
-							<ul>
-								<li><a href="/project/index.html" class="blue-text text-darken-4">Home</a></li>
-								<li><a href="/project/events.html" class="blue-text text-darken-4">Events</a></li>
-								<li><a href="/project/blog.html" class="blue-text text-darken-4">Blog</a></li>
-							</ul>
-						</div>
-					</li>
-				</ul>
-			</li>
-			<li><a href="/about/index.html" class="blue-text text-darken-4">About</a></li>
-			<li><a href="/admin/index.html" class="blue-text text-darken-4 admin hide">Admin</a></li>
-			<li><a href="/account/index.html" class="blue-text text-darken-4 account hide"></a></li>
-			<li><a href="/login/index.html" class="blue-text text-darken-4 login">Login</a></li>
-		</ul>
-	</div>
+	<!-- Navbar Component Container -->
+	<div id="navbar-container"></div>
 	<div class="container">
 		<div class="row">
 			<h3 class="center"><b class="blue-text text-darken-4">Event Blog</b></h3>
@@ -92,9 +27,34 @@
 			<a href="#" id="writenew" class="waves-effect waves-light btn-large blue darken-4">Write new</a>
 		</div>
 		<br>
+		<!-- <div id="test-event" class="panel panel--event card">
+			<div class="card-content panel-content--event">
+				<div class="container event-header-container">
+					<div class="row event-header-row" style="margin: 0">
+						<div class="col s8 event-header-left">
+							<span class="card-title blue-text text-darken-4"><b>Test Event</b></span>
+						</div>
+						<div class="col s4 event-header-right">
+							<p class="event-text"><b>Author:</b> Test Author</p>
+						</div>
+					</div>
+				</div>
+				<div class="container event-body-container">
+					<p>This is a test blog post. This is a test blog post. This is a test blog post.
+						This is a test blog post. This is a test blog post. This is a test blog post. This is a test blog
+						post. This is a test blog post. This is a test blog post. This is a test blog post. This is a
+						test blog post. This is a test blog post. This is a test blog post. This is a test blog post.
+						This is a test blog post. This is a test blog post. This is a test blog post. This is a test
+						blog post. This is a test blog post. This is a test blog post. This is a test blog post. This
+						is a test blog post. This is a test blog post. This is a test blog post. This is a test blog
+						post.</p>
+					
+					<a href="#" class="show-more">Show More</a>
+				</div>
+			</div>
+		</div> -->
 		<div id="blogcontainer" class="row">
-			<div class="col m6 s12" id="col1"></div>
-			<div class="col m6 s12" id="col2"></div>
+			<div class="col s12" id="blogsCol"></div>
 		</div>
 	</div>
 	<div id="login" class="modal">
@@ -212,6 +172,7 @@
 	<script type="text/javascript" src="/js/firebaseStuff.js"></script>
 	<script type="text/javascript" src="/js/materialize.min.js"></script>
 	<script type="text/javascript" src="/js/preloader.js"></script>
+	<script type="text/javascript" src="/js/navbar-component.js"></script>
 	<script type="text/javascript" src="/js/navbar.js"></script>
 	<script type="text/javascript" src="/events/blog.js"></script>
 </body>

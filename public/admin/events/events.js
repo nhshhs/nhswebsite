@@ -11,6 +11,7 @@ var counter = -1;
 var colCounter = 0;
 
 $(document).ready(function () {
+	$(".modal").modal();
 	doEvents();
 });
 
@@ -196,42 +197,93 @@ function addHTMLEvent(title, leader, date, time, userCount, maxpeople, location,
 	if (isNaN(maxpeople)) {
 		maxpeople = "unlimited";
 	}
-	//description = linkifyStr(description);
+	// Build a panel that matches the site-wide event panels (collapsible body + footer show-more)
 	var div = document.createElement('div');
-	div.className = 'card hoverable';
-	div.innerHTML = '<div class="card-content"> <span class="card-title blue-text text-darken-4"><b>' + title + '</b></span>\
-								<br>\
-								<p><b>Event leader: </b> ' + leader + '</p>\
-								<p><i class="material-icons">today</i> ' + date + '</p>\
-								<p><i class="material-icons">access_time</i> ' + time + '</p>\
-								<p><i class="material-icons">location_on</i> ' + location + '</p>\
-								<p><i class="material-icons">people</i> ' + userCount + '/' + maxpeople + '</p>\
-								<br>\
-								<p>' + description + '</p>\
-							</div>\
-							<div class="card-action center-align">\
-								<a href="#" class="waves-effect waves-light btn blue darken-4 manage">Manage</a>\
-							</div>\
-								<p class="hide eventid">' + id + '</p>';
+	div.className = 'panel panel--event card hoverable';
+	div.innerHTML = `
+		<div class="card-content panel-content--event">
+			<div class="container event-header-container">
+				<div class="row event-header-row" style="margin: 0">
+					<div class="col s8 event-header-left">
+						<span class="card-title blue-text text-darken-4"><b>${title}</b></span>
+					</div>
+					<div class="col s4 event-header-right">
+						<p class="event-text"><b>Event Leader:</b>${leader}</p>
+					</div>
+				</div>
+			</div>
+			<div class="container event-body-container">
+				<div class="event-body-inner collapsed">
+					<div class="row" style="margin: 0;">
+						<div class="col s12">
+							<p><i class="material-icons">today</i>${date}</p>
+							<p><i class="material-icons">access_time</i>${time}</p>
+							<p><i class="material-icons">location_on</i>${location}</p>
+                            <p><i class="material-icons">people</i>${userCount}/${maxpeople}</p>
+							<div class="event-description">${description}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="container event-footer-container">
+				<div class="row event-footer-row">
+					<div class="col s12 event-footer-col">
+						<a href="#" class="waves-effect waves-light btn blue darken-4 manage" style="margin-left: auto;">Manage</a>
+						<a href="#" class="waves-effect waves-light btn red accent-4 delete-event-btn" style="margin-left: 8px;">Delete</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<p class="hide eventid">${id}</p>`;
 	//for number of columns, which depens on device size
-	if (windowWidth > desktopWidth) {
-		document.getElementById("col" + (colCounter + 1)).appendChild(div);
-		colCounter++;
-		if (colCounter >= 3) { //3 columns
-			colCounter = 0;
-		}
-	} else if (windowWidth > tabletWidth) {
-		document.getElementById("col" + (colCounter + 1)).appendChild(div);
-		colCounter++;
-		if (colCounter >= 2) { //2 columns
-			colCounter = 0;
-		}
-	} else { //mobile devices
-		document.getElementById("col" + (colCounter + 1)).appendChild(div); //1 column
-	}
+	document.getElementById("eventCol").appendChild(div);
 }
 
 $(document).on('click', '.manage', function () {
 	var eventSelectedID = $(this).closest(".card").find(".eventid").text();
 	window.location = "/admin/event/index.html?type=regular&eventid=" + eventSelectedID;
 });
+
+var pendingDeleteEventId = null;
+var pendingDeleteEventCard = null;
+
+$(document).on('click', '.delete-event-btn', function (e) {
+	e.preventDefault();
+	var card = $(this).closest(".card");
+	var id = card.find(".eventid").text();
+	var title = card.find(".card-title").text().trim();
+	if (e.shiftKey) {
+		deleteListEvent(id, card);
+	} else {
+		pendingDeleteEventId = id;
+		pendingDeleteEventCard = card;
+		$("#deleteEventName").text(title);
+		M.Modal.getInstance($("#areyousuredeleteevent")).open();
+	}
+});
+
+function confirmDeleteListEvent() {
+	if (!pendingDeleteEventId) {
+		return;
+	}
+	deleteListEvent(pendingDeleteEventId, pendingDeleteEventCard);
+}
+
+function deleteListEvent(id, card) {
+	showLoader();
+	firebase.firestore().collection("events").doc(id).delete().then(function () {
+		pendingDeleteEventId = null;
+		pendingDeleteEventCard = null;
+		if (card && card.length) {
+			card.remove();
+		}
+		if ($("#eventCol .card").length === 0) {
+			document.getElementById("messagearea").innerHTML =
+				'<h5 class="center">There are no events right now.</h5>';
+		}
+		hideLoader();
+	}).catch(function (error) {
+		hideLoader();
+		window.alert("Could not delete event. Error: " + (error.message || error));
+	});
+}

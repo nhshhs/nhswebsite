@@ -5,6 +5,7 @@ const desktopWidth = 992, tabletWidth = 600;
 var windowWidth = window.innerWidth;
 
 $(document).ready(function () {
+	$(".modal").modal();
 
 	firebase.firestore().collection("project").doc("blog").collection("pending").get().then(snap => {
 		if (snap.size === 0) {
@@ -72,26 +73,35 @@ var colCounter = 0;
 
 function addHTMLPost(event, author, post, blogid, authorid) {
 	var div = document.createElement('div');
-	div.className = 'card hoverable';
-	div.innerHTML = '<div class="card-content"> <span class="card-title blue-text text-darken-4 center"><b>' + event + '</b></span>\
-							<p class="center">Author: <span class="author">' + author + '</span></p>\
-							<br>\
-							<p class="center">' + post + '</p>\
-						</div>\
-						<div class="card-action center-align">\
-							<a href="#" class="waves-effect waves-light btn blue darken-4 approve">Approve</a>\
-						</div>\
-							<p class="hide blogid">' + blogid + '</p>\
-							<p class="hide authorid">' + authorid + '</p>';
-	if (windowWidth > tabletWidth) {
-		document.getElementById("col" + (colCounter + 1)).appendChild(div);
-		colCounter++;
-		if (colCounter >= 2) { //2 columns
-			colCounter = 0;
-		}
-	} else { //mobile devices
-		document.getElementById("col" + (colCounter + 1)).appendChild(div); //1 column
-	}
+	// mark as blog so it can bypass event preview clipping
+	div.className = 'panel panel--event panel--blog card hoverable';
+	div.innerHTML = `
+		<div class="card-content panel-content--event">
+			<div class="container event-header-container">
+				<div class="row event-header-row" style="margin: 0">
+					<div class="col s8 event-header-left">
+						<span class="card-title blue-text text-darken-4"><b>${event}</b></span>
+					</div>
+					<div class="col s4 event-header-right">
+						<p class="event-text"><b>Author:</b> ${author}</p>
+					</div>
+				</div>
+			</div>
+			<div class="container event-body-container">
+				<p>${post}</p>
+			</div>
+			<div class="container event-footer-container">
+				<div class="row event-footer-row">
+					<div class="col s12 event-footer-col">
+						<a href="#" class="waves-effect waves-light btn blue darken-4 approve" style="margin:auto;">Approve</a>
+						<a href="#" class="waves-effect waves-light btn red accent-4 delete-blog-btn" style="margin-left: 8px;">Delete</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<p class="hide blogid">${blogid}</p>
+		<p class="hide authorid">${authorid}</p>`;
+	document.getElementById("projectBlogsCol").appendChild(div);
 }
 
 //approves the blog and gives the author .5 hours
@@ -150,3 +160,46 @@ $(document).on('click', '.approve', function () {
 		window.alert("Error: " + error);
 	});
 });
+
+var pendingDeleteBlogId = null;
+var pendingDeleteBlogCard = null;
+
+$(document).on('click', '.delete-blog-btn', function (e) {
+	e.preventDefault();
+	var card = $(this).closest(".card");
+	var id = card.find(".blogid").text();
+	var author = card.find(".event-text").text().replace(/^Author:\s*/i, "").trim();
+	if (e.shiftKey) {
+		deleteBlogPost(id, card);
+	} else {
+		pendingDeleteBlogId = id;
+		pendingDeleteBlogCard = card;
+		$("#deleteBlogName").text(author || "this author");
+		M.Modal.getInstance($("#areyousuredeleteblog")).open();
+	}
+});
+
+function confirmDeleteBlog() {
+	if (!pendingDeleteBlogId) {
+		return;
+	}
+	deleteBlogPost(pendingDeleteBlogId, pendingDeleteBlogCard);
+}
+
+function deleteBlogPost(id, card) {
+	toggleLoader();
+	firebase.firestore().collection("project").doc("blog").collection("pending").doc(id).delete().then(function () {
+		pendingDeleteBlogId = null;
+		pendingDeleteBlogCard = null;
+		if (card && card.length) {
+			card.remove();
+		}
+		if ($("#projectBlogsCol .card").length === 0) {
+			$("#blogcontainer").html('<h5 class="center">There are no pending blog posts.</h5>');
+		}
+		toggleLoader();
+	}).catch(function (error) {
+		toggleLoader();
+		window.alert("Could not delete blog post. Error: " + (error.message || error));
+	});
+}

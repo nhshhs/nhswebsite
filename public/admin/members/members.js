@@ -4,16 +4,46 @@
 var userList = [],//all the users
 	showList = [];//only the users displayed to the users, based on the filters
 
+function buildMemberHtml(user, displayName) {
+	displayName = displayName || (user.firstName + " " + user.lastName);
+	return '<div class="collection-item">' +
+		'<a href="/admin/member/index.html?uid=' + user.id + '" class="blue-text text-darken-4">' +
+		'<p>' +
+		'<span class="row"><span class="badge">Regular: ' + user.regularHours + '</span></span>' +
+		'<span class="row"><span class="badge">Project: ' + user.projectHours + '</span>' + displayName + '</span>' +
+		'<span class="row"><span class="badge">Social: ' + user.socialHours + '</span></span>' +
+		'</p>' +
+		'</a>' +
+		'<a href="javascript:void(0)" class="secondary-content red-text delete-member-btn" data-uid="' + user.id + '" data-name="' + (user.firstName + " " + user.lastName).replace(/"/g, "&quot;") + '">' +
+		'<i class="material-icons">delete</i>' +
+		'</a>' +
+		'</div>';
+}
 
 //gets the 
 $(document).ready(function () {
 	$(".modal").modal();
+	$(document).on("click", ".delete-member-btn", function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		var uid = $(this).data("uid");
+		var name = $(this).data("name");
+		if (e.shiftKey) {
+			deleteMemberUid = uid;
+			confirmDeleteMember();
+		} else {
+			promptDeleteMember(uid, name);
+		}
+	});
 	firebase.firestore().collection('users').get()
 		.then(function (querySnapshot) {
 			if (querySnapshot.length === 0) {
 				//this should never happen, there has to be an account to get to the members page
 			} else {
 				querySnapshot.docs.forEach(function (doc) {
+					if (doc.data().deleted) {
+						return;
+					}
 
 					userList.push({
 						firstName: doc.data().firstName,
@@ -24,13 +54,14 @@ $(document).ready(function () {
 						grade: doc.data().grade,
 						idNumber: doc.data().idNumber,
 						id: doc.id,
-						html: '<a href="/admin/member/index.html?uid='+doc.id+'" class="collection-item blue-text text-darken-4">\
-									<p>\
-										<span class="row"><span class="badge" >Regular: ' + doc.data().regularHours + '</span></span>\
-										<span class="row"><span class="badge" >Project: ' + doc.data().projectHours + '</span>' + doc.data().firstName + ' ' + doc.data().lastName + '</span>\
-										<span class="row"><span class="badge" >Social: ' + doc.data().socialHours + '</span></span>\
-									</p>\
-								</a>',
+						html: buildMemberHtml({
+							firstName: doc.data().firstName,
+							lastName: doc.data().lastName,
+							regularHours: doc.data().regularHours,
+							projectHours: doc.data().projectHours,
+							socialHours: doc.data().socialHours,
+							id: doc.id
+						}),
 					});
 				});
 			}
@@ -85,13 +116,7 @@ function filterBySearch() {
 				let startLocation = fullName.toUpperCase().indexOf(search);
 				let newUser = Object.assign({}, user);;
 				fullName = fullName.substring(0, startLocation) + "<b>" + fullName.substring(startLocation, startLocation + search.length) + "</b>" + fullName.substring(startLocation + search.length);
-				newUser.html = '<a href="/admin/member/index.html?uid='+user.id+'" class="collection-item blue-text text-darken-4">\
-									<p>\
-										<span class="row"><span class="badge" >Regular: ' + user.regularHours + '</span></span>\
-										<span class="row"><span class="badge" >Project: ' + user.projectHours + '</span>' + fullName + '</span>\
-										<span class="row"><span class="badge" >Social: ' + user.socialHours + '</span></span>\
-									</p>\
-								</a>';
+				newUser.html = buildMemberHtml(user, fullName);
 				newList.push(newUser);
 			}
 		});
@@ -145,4 +170,115 @@ function downloadXlsx() {
 	XLSX.utils.book_append_sheet(workbook, seniorws, "Seniors");
 	XLSX.writeFile(workbook, 'NHS_MemberData('+ (new Date().toLocaleDateString().replace(/\//g, "-")) +').xlsx');
 	toggleLoader();
+}
+
+function promoteAllGrades() {
+	var toPromote = userList.filter(function (user) {
+		var grade = parseInt(user.grade, 10);
+		return grade === 10 || grade === 11;
+	});
+	if (toPromote.length === 0) {
+		window.alert("No grade 10 or 11 members to promote.");
+		return;
+	}
+
+	var currentUser = firebase.auth().currentUser;
+	if (!currentUser) {
+		window.alert("You must be signed in to promote grades.");
+		return;
+	}
+
+	toggleLoader();
+	var db = firebase.firestore();
+	var commits = [];
+	var batch = db.batch();
+	var opsInBatch = 0;
+
+	toPromote.forEach(function (user) {
+		if (opsInBatch === 500) {
+			commits.push(batch.commit());
+			batch = db.batch();
+			opsInBatch = 0;
+		}
+		var newGrade = parseInt(user.grade, 10) + 1;
+		batch.update(db.collection("users").doc(user.id), {
+			grade: newGrade,
+			justUpdatedBy: currentUser.uid
+		});
+		user._newGrade = newGrade;
+		opsInBatch++;
+	});
+	if (opsInBatch > 0) {
+		commits.push(batch.commit());
+	}
+
+	Promise.all(commits).then(function () {
+		toPromote.forEach(function (user) {
+			user.grade = user._newGrade;
+			delete user._newGrade;
+			user.html = buildMemberHtml(user);
+		});
+		updateShownList();
+		toggleLoader();
+		window.alert("Promoted " + toPromote.length + " member" + (toPromote.length === 1 ? "" : "s") + ".");
+	}).catch(function (error) {
+		toggleLoader();
+		window.alert("Could not promote grades. Error: " + (error.message || error));
+	});
+}
+
+function resetAllHours() {
+	if (userList.length === 0) {
+		window.alert("No members to reset.");
+		return;
+	}
+
+	var currentUser = firebase.auth().currentUser;
+	if (!currentUser) {
+		window.alert("You must be signed in to reset hours.");
+		return;
+	}
+
+	toggleLoader();
+	var db = firebase.firestore();
+	var commits = [];
+	var batch = db.batch();
+	var opsInBatch = 0;
+
+	userList.forEach(function (user) {
+		if (opsInBatch === 500) {
+			commits.push(batch.commit());
+			batch = db.batch();
+			opsInBatch = 0;
+		}
+		batch.update(db.collection("users").doc(user.id), {
+			regularHours: 0,
+			projectHours: 0,
+			socialHours: 0,
+			justUpdatedBy: currentUser.uid + " (reset all hours)"
+		});
+		opsInBatch++;
+	});
+	if (opsInBatch > 0) {
+		commits.push(batch.commit());
+	}
+
+	Promise.all(commits).then(function () {
+		return db.collection("info").doc("hoursRequirements").set({
+			hoursLastResetAt: new Date().toISOString()
+		}, { merge: true });
+	}).then(function () {
+		userList.forEach(function (user) {
+			user.regularHours = 0;
+			user.projectHours = 0;
+			user.socialHours = 0;
+			user.html = buildMemberHtml(user);
+		});
+		updateShownList();
+		toggleLoader();
+		window.alert("Reset hours to zero for " + userList.length + " member" + (userList.length === 1 ? "" : "s") + ".");
+	}).catch(function (error) {
+		toggleLoader();
+		window.alert("Could not reset hours. Error: " + (error.message || error));
+	});
 }

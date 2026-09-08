@@ -124,20 +124,36 @@ var colCounter = 0;
 
 function addHTMLPost(event, author, post) {
 	var div = document.createElement('div');
-	div.className = 'card hoverable';
-	div.innerHTML = '<div class="card-content"> <span class="card-title blue-text text-darken-4 center"><b>' + event + '</b></span>\
-							<p class="center">Author: ' + author + '</p>\
-							<br>\
-							<p>' + post + '</p>';
-	if (windowWidth > tabletWidth) {
-		document.getElementById("col" + (colCounter + 1)).appendChild(div);
-		colCounter++;
-		if (colCounter >= 2) { //2 columns
-			colCounter = 0;
-		}
-	} else { //mobile devices
-		document.getElementById("col" + (colCounter + 1)).appendChild(div); //1 column
-	}
+	// mark as blog so it can bypass event preview clipping
+	div.className = 'panel panel--event panel--blog card hoverable';
+	div.innerHTML = `<div class="card-content panel-content--event">
+				<div class="container event-header-container">
+					<div class="row event-header-row" style="margin: 0">
+						<div class="col s8 event-header-left">
+							<span class="card-title blue-text text-darken-4"><b>${event}</b></span>
+						</div>
+						<div class="col s4 event-header-right">
+							<p class="event-text"><b>Author:</b> ${author}</p>
+						</div>
+					</div>
+				</div>
+				<div class="container event-body-container">
+					<p>${post}</p>
+					
+				</div>
+			</div>`;
+
+	document.getElementById("projectBlogsCol").appendChild(div);
+
+	// if (windowWidth > tabletWidth) {
+	// 	document.getElementById("col" + (colCounter + 1)).appendChild(div);
+	// 	colCounter++;
+	// 	if (colCounter >= 2) { //2 columns
+	// 		colCounter = 0;
+	// 	}
+	// } else { //mobile devices
+	// 	document.getElementById("col" + (colCounter + 1)).appendChild(div); //1 column
+	// }
 }
 
 $(document).on('click', '#writenew', function () {

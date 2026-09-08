@@ -37,6 +37,8 @@ html {
 
 #homepage {
 	background: url('/img/NHS2224.JPG');
+	background-color: rgba(0, 0, 0, 0.5);
+	background-blend-mode: multiply;
 	background-repeat: no-repeat;
 	background-size: cover;
 	-webkit-background-size: cover;
@@ -44,6 +46,122 @@ html {
 	-o-background-size: cover;
 	background-position: top;
 	height: auto;
+}
+
+/* Exec-only homepage background changer */
+.bg-change-btn {
+	position: fixed;
+	bottom: 1.25rem;
+	right: 1.25rem;
+	z-index: 100;
+	width: 2.75rem;
+	height: 2.75rem;
+	padding: 0;
+	border: 1px solid rgba(255, 255, 255, 0.35);
+	border-radius: 50%;
+	background: rgba(0, 0, 0, 0.45);
+	color: #fff;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+	transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.bg-change-btn:hover {
+	background: rgba(0, 0, 0, 0.65);
+	transform: scale(1.05);
+}
+
+.bg-change-btn:disabled,
+.bg-change-btn.is-uploading {
+	opacity: 0.7;
+	cursor: wait;
+	transform: none;
+}
+
+.bg-change-btn .material-icons {
+	font-size: 1.35rem;
+	line-height: 1;
+}
+
+.project-customize-bar {
+	position: fixed;
+	bottom: 1.25rem;
+	right: 1.25rem;
+	z-index: 100;
+	display: flex;
+	flex-direction: column;
+	gap: 0.65rem;
+}
+
+.project-customize-bar .bg-change-btn {
+	position: static;
+}
+
+.project-landing-description {
+	font-size: 1.64rem;
+	line-height: 1.4;
+	font-weight: 400;
+}
+
+.project-customize-editor-label {
+	display: block;
+	margin: 0.5rem 0 0.35rem;
+	color: #9e9e9e;
+	font-size: 0.8rem;
+}
+
+#project-description-editor {
+	max-width: 100%;
+	margin-bottom: 0.5rem;
+}
+
+#project-description-editor .ql-container {
+	font-family: inherit;
+	font-size: 1rem;
+	height: auto;
+	min-height: 160px;
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+}
+
+#project-description-editor .ql-editor {
+	min-height: 160px;
+	padding: 12px 15px;
+}
+
+#project-description-editor .ql-toolbar {
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+}
+
+.homepage-btn {
+	font-size: 15px;
+	padding: 10px 15px;
+	color: #fff;
+	border-radius: 5px;
+	display: inline-block; /* allow padding/margins and width control */
+	text-decoration: none; /* anchors should not be underlined */
+	text-align: center;
+	font-weight: 600;
+}
+
+/* Primary filled homepage button (green) */
+.homepage-btn--primary {
+    background-color: green;
+    border: 0;
+    color: #fff;
+    padding: 0.7rem 1.2rem;
+}
+
+/* Outline style homepage button (transparent with gray border) */
+.homepage-btn--outline {
+    background-color: transparent;
+    border: 2px solid gray;
+    color: #fff;
+    padding: 0.7rem 1.2rem;
 }
 
 .material-icons {
@@ -68,4 +186,717 @@ input[type=number]::-webkit-outer-spin-button {
   left: 0;
 }
 
+#homepagelogo {
+	height: 150px;
+	width: auto;
+	vertical-align: center;
+	margin-bottom: -50px;
+}
 
+/* Navbar logo styles */
+.nav-logo {
+	height: 50px;
+	width: auto;
+	vertical-align: middle;
+	margin-right: 10px;
+}
+
+.brand-text {
+	margin-left: 5px;
+	vertical-align: middle;
+	display: inline-block;
+}
+
+/* Slightly smaller logo in the mobile sidenav */
+.mobile-logo {
+	height: 64px;
+}
+
+/* Ensure the brand link contents line up */
+nav .brand-logo img {
+	display: inline-block;
+}
+
+@media only screen and (max-width: 600px) {
+	.nav-logo { height: 36px; }
+	.brand-text { display: none; } /* hide text on very small screens if desired */
+}
+
+/* Stacked brand lines */
+.brand-text {
+	display: inline-block;
+	vertical-align: middle;
+	line-height: 1;
+}
+.brand-line {
+	display: block;
+	line-height: 1;
+	font-size: 18px; /* adjust size as desired */
+	margin: 0;
+}
+/* Ensure vertical centering inside the nav */
+nav.navbar-nav .brand-logo {
+	display: inline-flex;
+	align-items: center;
+}
+
+/* Make the nav wrapper a flex container so elements (logo + brand-text) are vertically centered */
+nav.navbar-nav {
+	min-height: 64px; /* materialize default, tweak as needed */
+}
+nav.navbar-nav .nav-wrapper {
+	display: flex;
+	align-items: center;
+	height: 100%;
+}
+
+/* Keep brand/logo on the left and push nav items to the right */
+nav.navbar-nav .nav-wrapper > .brand-logo {
+	flex: 0 0 auto; /* don't grow or shrink */
+	position: relative; /* override Materialize absolute if present */
+}
+
+/* Push the right-side nav to the far right and display its items inline */
+nav.navbar-nav .nav-wrapper .right,
+nav.navbar-nav .nav-wrapper ul.right {
+	margin-left: auto;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+/* Make sure the nav list items don't wrap or shrink */
+nav.navbar-nav .nav-wrapper ul#nav-mobile {
+	white-space: nowrap;
+}
+
+nav.navbar-nav .nav-wrapper .right a.navbar-text {
+	display: inline-flex;
+}
+nav.navbar-nav .nav-wrapper .sidenav-trigger {
+	display: none; /* Hide by default */
+}
+
+/* Ensure logo is rendered as block and vertically centered; remove stray vertical-align */
+.nav-logo {
+	display: block;
+	margin: 0; /* remove default margin that can misalign */
+	height: 48px; /* adjust as needed */
+}
+
+/* If you increased navbar height elsewhere, use this to center the logo proportionally */
+@media only screen and (min-width: 601px) {
+	nav.navbar-nav { min-height: 72px; }
+	.nav-logo { height: 56px; }
+}
+
+
+@media only screen and (max-width: 600px) {
+	.brand-text { display: inline-block; margin-left: 8px; }
+	.brand-line { font-size: 16px; }
+}
+
+/* Sidenav brand header (mobile) */
+.sidenav .sidenav-brand {
+	padding: 18px 16px;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+.sidenav .mobile-logo {
+	height: 64px;
+	width: auto;
+}
+.sidenav .mobile-brand-text .brand-line {
+	color: #fff;
+	font-size: 16px;
+}
+.sidenav .mobile-brand-text .brand-line-bottom { font-weight: 700; }
+
+/* Better vertical centering for right-side nav items and small downward nudge */
+nav.navbar-nav .nav-wrapper ul#nav-mobile li a,
+nav.navbar-nav .nav-wrapper .right a.navbar-text,
+nav.navbar-nav .nav-wrapper ul#nav-mobile li a {
+		display: inline-flex;
+		align-items: center; /* center content inside the anchor */
+		padding-top: 3px;   /* nudge down a bit */
+}
+
+/* Hide the hamburger on larger screens; use !important to override other rules */
+nav.navbar-nav .nav-wrapper .sidenav-trigger {
+		display: none !important;
+}
+
+/* Show the hamburger only on small screens */
+@media only screen and (max-width: 992px) {
+	nav.navbar-nav .nav-wrapper .sidenav-trigger {
+		display: inline-flex !important;
+		align-items: center;
+		padding-top: 6px;
+		padding-bottom: 6px;
+	}
+}
+
+/* Move hamburger to the left of the brand in the flex layout so it sits in the corner */
+nav.navbar-nav .nav-wrapper .sidenav-trigger {
+	order: -1; /* place before brand in flex order */
+	margin-right: 12px;
+}
+
+/* Make the hamburger icon white */
+nav.navbar-nav .nav-wrapper .sidenav-trigger .material-icons,
+nav.navbar-nav .nav-wrapper .sidenav-trigger .icon-black {
+	color: #ffffff !important;
+	font-size: 28px; /* slightly larger for visibility */
+}
+
+/* Style the mobile sidenav background and links */
+.sidenav {
+	background-color: #1a237e !important;
+}
+.sidenav .navbar-text,
+.sidenav a {
+	color: #ffffff !important;
+}
+.sidenav .collapsible-body .navbar-text,
+.sidenav .collapsible-header {
+	color: #ffffff !important;
+}
+
+/* Ensure dropdowns / sidenav items have readable hover on the dark background */
+.sidenav a.navbar-text:hover,
+.sidenav .collapsible-header:hover {
+	background-color: rgba(255,255,255,0.06) !important;
+}
+
+/* Make collapsible headers/bodies match sidenav dark background and white text */
+.sidenav .collapsible, .sidenav .collapsible .collapsible-header, .sidenav .collapsible .collapsible-body {
+	background-color: transparent !important;
+}
+
+.sidenav .collapsible .collapsible-header {
+	color: #ffffff !important;
+	border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.sidenav .collapsible .collapsible-body {
+	padding-left: 0 !important;
+}
+
+.sidenav .collapsible .collapsible-body a.navbar-text,
+.sidenav .collapsible .collapsible-body li a {
+	color: #ffffff !important;
+}
+
+/* Lighter background for expanded submenu items to make them stand out */
+.sidenav .collapsible .collapsible-body ul li a.navbar-text,
+.sidenav .collapsible .collapsible-body ul li {
+	background-color: rgba(255,255,255,0.06) !important; /* slightly lighter */
+	color: #ffffff !important;
+	display: block;
+	/* padding: 10px 14px !important; */
+	margin-left: 5px;
+	border-radius: 6px;
+}
+
+.sidenav .collapsible .collapsible-body ul li a.navbar-text:hover {
+	background-color: rgba(255,255,255,0.10) !important; /* stronger on hover */
+	color: #ffffff !important;
+}
+
+/* If you prefer slightly more contrast, increase the alpha in the rgba above (e.g. 0.08 / 0.12) */
+
+/* Nudge icons slightly if they still look high */
+nav.navbar-nav .nav-wrapper a .material-icons,
+nav.navbar-nav .nav-wrapper a i.material-icons {
+	line-height: 1;
+	transform: translateY(2px);
+}
+
+/* dropdown background and link color (desktop) */
+.dropdown-content {
+  background-color: #1a237e  !important; /* replace with any hex or CSS color */
+  color: #fff !important;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.18);
+  border-radius: 4px;
+}
+
+/* Desktop dropdown hover */
+.dropdown-content li > a.navbar-text:hover,
+.dropdown-content a.navbar-text:hover {
+  background-color: #1a237e !important; /* hover bg */
+  color: #ffffff !important;                              /* hover text */
+}
+
+/* Active/selected state */
+.dropdown-content li.active > a,
+.dropdown-content li {
+  background-color: #1a237e !important;
+  color: #ffffff !important;
+}
+
+.panel {
+	border-radius: 2.5vh;
+	transition: box-shadow 0.3s ease;
+}
+
+.panel:hover {
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.panel--hours {
+	height: 60vh;
+}
+
+.panel--hours.hour-card {
+	cursor: pointer;
+	transition: box-shadow 0.2s ease, transform 0.15s ease;
+}
+
+.panel--hours.hour-card:hover,
+.panel--hours.hour-card:focus {
+	box-shadow: 0 6px 24px rgba(0, 0, 0, 0.22);
+	transform: translateY(-2px);
+	outline: none;
+}
+
+.panel-content--hours {
+	display: flex;
+	flex-direction: column; 
+	justify-content: space-between; 
+	height: 100%;
+}
+
+.account-section {
+	padding: 1.75rem 0 2rem;
+}
+
+.account-section > h4 {
+	margin-top: 0;
+	margin-bottom: 0.35rem;
+	font-weight: 700;
+}
+
+.account-section > .grey-text {
+	margin-top: 0;
+	margin-bottom: 1.25rem;
+}
+
+.members-action-buttons {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 12px;
+}
+
+.members-action-buttons .btn {
+	margin-left: 0;
+}
+
+/* Utility modifier: center panel horizontally within its container */
+.panel--event {
+	margin: 40px auto; /* centers block-level element with a set width */
+	max-width: 100%; /* avoid overflow on small screens */
+	text-align: center;
+	/* use a reasonable max-width for readability instead of viewport-height based width */
+	width: 100%;
+	max-width: 1100px;
+	/* allow panels to size naturally based on their content */
+	height: auto;
+	/* prevent inner elements from bleeding out of rounded corners */
+	overflow: hidden;
+	-webkit-background-clip: padding-box;
+	background-clip: padding-box;
+}
+
+.panel-content--event {
+	/* Let content determine height so different panels remain consistent before expansion */
+	height: auto;
+}
+
+.event-header-container {
+	width: 100%;
+	height: 70px;
+	background-color: #f5f5f5;
+	padding: 1rem 1.25rem; /* space around the title */
+	text-align: center;
+	box-sizing: border-box;
+	/* round only the top corners so header follows the panel's curve */
+	border-top-left-radius: 2.5vh;
+	border-top-right-radius: 2.5vh;
+}
+
+/* Make the header flush with the panel/card edges */
+.panel.panel--event .card-content {
+	padding: 0; /* remove inner padding so header spans full width */
+}
+
+.event-header-container .card-title {
+	margin: 0; /* remove default title margins */
+	text-align: left;
+	display: block;
+	padding: 0; /* already provided on the container */
+	font-weight: 400;
+	font-size: 2rem;
+}
+
+.event-text {
+	font-size: 1.25rem;
+	line-height: 1.5;
+}
+
+/* Header row: use flex to align the left and right columns vertically */
+.event-header-row {
+	display: flex;
+	align-items: stretch; /* make children fill the header height so internal alignment works */
+	height: 100%; /* ensure the row fills the header container when header has explicit height */
+}
+
+.event-header-left {
+	display: flex;
+	align-items: center; /* keep title vertically centered within the full-height column */
+	margin-top: 5px;
+}
+
+.event-header-right {
+	display: flex;
+	justify-content: flex-end; /* push content to the right */
+	align-items: flex-end;     /* push content to the bottom */
+}
+
+.event-header-right .event-text {
+	margin: 0;
+	text-align: right;
+}
+
+/* --- Event body vertical divider ---
+   On medium+ screens, make the event body row a flex container so the
+   left and right columns match height and we can draw a full-height
+   vertical divider using a left border on the right column. On small
+   screens the columns stack and the border is removed. */
+@media only screen and (min-width: 601px) {
+	.event-body-container .row {
+		display: flex;
+		align-items: stretch; /* ensure columns stretch to equal height */
+	}
+
+	/* Respect the original 8/4 column split while using flexbox */
+	.event-body-container .col.s8 {
+		flex: 0 0 66.6666%;
+		max-width: 66.6666%;
+	}
+	.event-body-container .col.s4 {
+		flex: 0 0 33.3333%;
+		max-width: 33.3333%;
+		box-sizing: border-box;
+		border-left: 1px solid rgba(0,0,0,0.85); /* the vertical divider */
+		padding-left: 1.25rem; /* spacing between divider and content */
+	}
+}
+
+/* On very small screens remove the divider to avoid awkward lines when stacked */
+@media only screen and (max-width: 600px) {
+	.event-body-container .col.s4 {
+		border-left: none;
+		padding-left: 0.75rem;
+	}
+}
+
+.event-body-container {
+	width: 100%;
+	/* Let the body size based on its content; collapsed state will limit visible area via .event-body-inner */
+	height: auto;
+	background-color: #fff;
+	padding: 1rem 1.25rem; /* space around the title */
+	text-align: left;
+	box-sizing: border-box;
+}
+
+/* Inner wrapper that can be collapsed to a fixed height and show a fade/blur at the bottom */
+.event-body-inner {
+	position: relative;
+	overflow: visible; /* outer container controls overall clipping */
+}
+
+/* Collapsed state: limit height, hide overflowing content and show fade overlay */
+.event-body-inner.collapsed {
+	max-height: 190px; /* control how much of the body is visible when collapsed */
+	overflow: hidden;
+}
+
+/* Full-row fade overlay that covers both columns when collapsed */
+.panel--event.has-overflow .event-body-container:not(.expanded)::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: -8px; /* extend slightly below the container to ensure it masks overflow */
+	height: 60px; /* larger fade area to fully cover bottom content */
+	pointer-events: none;
+	z-index: 10; /* sit above content but below the show-more control */
+	background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.88) 65%, rgba(255,255,255,1) 100%);
+}
+
+/* Show more button placed at the bottom-left of the event body */
+.show-more {
+	display: inline-block;
+	margin-top: 0.5rem;
+	color: #1976d2; /* blue-ish link color */
+	font-weight: 700;
+	text-decoration: none;
+	position: relative;
+}
+
+/* When expanded, JS will update the .show-more text content. Removed pseudo-element to avoid duplicate text. */
+
+/* Small tweaks to align the sign up button when body expands/collapses */
+.event-footer-container { position: relative; }
+
+/* When any event panel's body container has the expanded class, allow it to grow to the content's full height */
+.panel--event .event-body-container.expanded {
+	height: auto !important;
+}
+
+/* Remove the fade overlay when expanded for any event panel */
+.panel--event .event-body-inner.expanded::after { display: none; }
+
+/* For all event panels: make their footer part of the document flow so the panel grows to contain it */
+.panel--event .event-footer-container {
+	position: relative !important; /* override absolute positioning used elsewhere */
+	z-index: 1 !important;
+	margin-top: 0.75rem;
+	border-bottom-left-radius: 2.5vh;
+	border-bottom-right-radius: 2.5vh;
+}
+
+/* Ensure the card-content uses natural height when event panels expand */
+.panel--event .card-content {
+	height: auto !important;
+}
+
+.event-footer-container {
+	position: absolute;
+	z-index: 20;
+	width: 100%;
+	height: 60px;
+	background-color: #f5f5f5;
+	padding: 1rem 1.25rem; /* space around the title */
+	text-align: center;
+	box-sizing: border-box;
+	/* round only the top corners so header follows the panel's curve */
+	border-bottom-left-radius: 2.5vh;
+	border-bottom-right-radius: 2.5vh;
+}
+
+.event-footer-row {
+	display: flex;
+	align-items: stretch; /* make children fill the header height so internal alignment works */
+	height: 100%; /* ensure the row fills the header container when header has explicit height */
+}
+
+.event-footer-col {
+	display: flex;
+	justify-content: right;
+	align-items: center;
+}
+
+/* Consistent pre-expanded sizing: define a single preview height used by all event panels */
+:root {
+	--event-body-preview-height: 250px; /* adjust this to control the visible preview height */
+}
+
+/* Stack header, body, footer so heights are predictable (header fixed, body = preview height, footer fixed) */
+.panel--event {
+	display: flex;
+	flex-direction: column;
+}
+
+.panel--event .card-content {
+	display: flex;
+	flex-direction: column;
+	padding: 0; /* already handled by inner containers */
+}
+
+/* The container controls the visible preview height; when expanded JS will add .expanded to allow auto height */
+.panel--event .event-body-container {
+	height: var(--event-body-preview-height);
+	overflow: hidden;
+	position: relative; /* contain absolutely positioned show-more */
+}
+
+.panel--event .event-body-container.expanded {
+	height: auto !important;
+}
+
+/* Make the inner wrapper fill the container so the fade overlay aligns to the container's bottom */
+.event-body-inner {
+	/* subtract vertical padding of the container (1rem top + 1rem bottom) so inner fits exactly */
+	height: calc(100% - 2rem);
+	position: relative;
+}
+
+/* The collapsed state no longer needs to set max-height on the inner wrapper; container controls clipping */
+.event-body-inner.collapsed {
+	overflow: visible; /* container hides overflow now */
+}
+
+/* Ensure inner becomes auto when expanded so content can grow naturally */
+.panel--event .event-body-container.expanded .event-body-inner {
+	height: auto;
+}
+
+/* Show-more now lives in the footer: left-aligned and visible above overlays */
+.panel--event .show-more {
+	position: relative; /* placed inside footer now */
+	left: 0;
+	bottom: 0;
+	margin-right: auto; /* push it to the left inside the footer flex */
+	margin-left: 0.25rem;
+	z-index: 60; /* ensure it's above overlays */
+	background: transparent;
+	pointer-events: auto;
+	display: inline-block;
+	font-weight: 700;
+}
+
+/* Footer layout: ensure left-aligned controls sit on the left and sign-up/button on the right */
+.panel--event .event-footer-row { display: flex; align-items: center; }
+.panel--event .event-footer-col { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+.panel--event .event-footer-col p,
+.panel--event .event-footer-col .btn { 
+	/* push these to the right */
+	margin-top: 1rem;
+}
+
+/* Blog panels should always size to fit their content (no collapsed preview) */
+.panel--blog {
+	/* Allow natural height based on content */
+	height: auto !important;
+}
+.panel--blog .event-body-container {
+	height: auto !important;
+	overflow: visible !important;
+}
+.panel--blog .event-body-inner,
+.panel--blog .event-body-inner.collapsed {
+	height: auto !important;
+	max-height: none !important;
+	overflow: visible !important;
+}
+.panel--blog .show-more { display: none !important; }
+.panel--blog.has-overflow::after { display: none !important; }
+
+/* Just always show all the content. I could edit previous CSS, but I'm so lost that I don't even know how to remove 
+	the previous "Show More" CSS correctly. So yeah, this will just overide everything. */
+/* @media only screen and (max-width: 992px) { */
+	/* Make both event panels and blog panels fully expanded */
+	.panel--event .event-body-container,
+	.panel--blog .event-body-container {
+		height: auto !important;
+		overflow: visible !important;
+	}
+
+	.panel--event .event-body-inner,
+	.panel--blog .event-body-inner,
+	.panel--event .event-body-inner.collapsed,
+	.panel--blog .event-body-inner.collapsed {
+		height: auto !important;
+		max-height: none !important;
+		overflow: visible !important;
+	}
+
+	/* Remove the fade/blur overlay on mobile */
+	.panel--event .event-body-container::after,
+	.panel--event.has-overflow .event-body-container::after,
+	.panel--blog .event-body-container::after,
+	.panel--blog.has-overflow .event-body-container::after {
+		display: none !important;
+		content: none !important;
+	}
+
+	/* Hide show-more controls on mobile */
+	.panel--event .show-more,
+	.panel--blog .show-more {
+		display: none !important;
+	}
+
+	/* Ensure footer flows normally below content */
+	.panel--event .event-footer-container,
+	.panel--blog .event-footer-container {
+		display: flex;
+		width: 100%;
+		align-items: center;
+		justify-content: right;
+	}
+
+	/* Let panels use normal document flow on mobile */
+	.panel--event,
+	.panel--blog {
+		display: block !important;
+	}
+/* } */
+
+/* Style for event descriptions to properly render rich text content */
+.event-description {
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+}
+
+/* Ensure Quill content displays properly in event descriptions */
+.event-description p {
+	margin: 0.5em 0;
+}
+
+.event-description p:first-child {
+	margin-top: 0;
+}
+
+.event-description p:last-child {
+	margin-bottom: 0;
+}
+
+.event-description ul,
+.event-description ol {
+	margin: 0.5em 0;
+	padding-left: 1.5em;
+}
+
+.event-description a {
+	color: #1976d2;
+	text-decoration: underline;
+}
+
+.event-description a:hover {
+	color: #1565c0;
+}
+
+/* Quill editor styling in modals and forms */
+#description-editor {
+	max-width: 100%;
+}
+
+#description-editor .ql-container {
+	font-family: inherit;
+	font-size: 1rem;
+	height: auto;
+	min-height: 200px;
+}
+
+#description-editor .ql-editor {
+	min-height: 200px;
+	padding: 12px 15px;
+}
+
+#description-editor .ql-toolbar {
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+}
+
+#description-editor .ql-container {
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+}
+
+.ql-editor strong{
+	font-weight:bold;
+}

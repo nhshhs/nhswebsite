@@ -12,7 +12,7 @@ firebase.auth().onAuthStateChanged(function (user) {
 						if (!doc.data().project.includes(user.uid)) {
 							window.location.href = "/404.html";
 						}
-					} else if (window.location.href.includes("/event") || window.location.href.includes("project=false")) {
+					} else if (window.location.href.includes("/event") || window.location.href.includes("/social") || window.location.href.includes("project=false")) {
 						if (!doc.data().ads.includes(user.uid)) {
 							window.location.href = "/404.html";
 						}
