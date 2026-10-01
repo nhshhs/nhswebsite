@@ -342,7 +342,11 @@ function toggleAllowedUsers() {
 
 function allowUsers() {
 	toggleLoader();
-	var newlist = $("#allowemaillist").val().replace(/\s/g, '').split(',');
+	var newlist = $("#allowemaillist").val().split(/[\n,]+/).map(function (e) {
+		return e.trim();
+	}).filter(function (e) {
+		return e.length > 0;
+	});
 
 	firebase.firestore().collection("info").doc("allowedUsers").get().then(function (doc) {
 		if (doc.exists) {
@@ -374,7 +378,11 @@ function allowUsers() {
 
 function removeUsers() {
 	toggleLoader();
-	var newlist = $("#removeemaillist").val().replace(/\s/g, '').split(',');
+	var newlist = $("#removeemaillist").val().split(/[\n,]+/).map(function (e) {
+		return e.trim();
+	}).filter(function (e) {
+		return e.length > 0;
+	});
 	firebase.firestore().collection("info").doc("allowedUsers").get().then(function (doc) {
 		if (doc.exists) {
 			var oldlist = doc.data().emailList;
@@ -405,6 +413,26 @@ function removeUsers() {
 	});
 
 	$("#emaillist").val("");
+}
+
+function clearAllowedUsers() {
+	if (!window.confirm("Clear the entire allowed users list? No one will be able to create a new account until emails are added again.")) {
+		return;
+	}
+	toggleLoader();
+	firebase.firestore().collection("info").doc("allowedUsers").update({
+		emailList: [],
+	}).then(function () {
+		M.toast({
+			html: 'Allowed users list cleared!'
+		});
+		$("#removeemaillist").val("");
+		M.textareaAutoResize($("#removeemaillist"));
+		updateEmailList();
+	}).catch(function (error) {
+		toggleLoader();
+		window.alert("Error: " + error);
+	});
 }
 
 function updateEmailList() {
